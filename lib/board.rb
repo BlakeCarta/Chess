@@ -33,6 +33,9 @@ class ChessBoard
         end
       end
     end
+    
+    setup_black_pieces
+    setup_white_pieces
 
     @board
   end
