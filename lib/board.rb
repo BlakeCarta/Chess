@@ -73,7 +73,7 @@ class ChessBoard
   def print_board
     8.times do |i|
       puts "   ---------------------------------" if i == 0
-      print " #{i} | "
+      print " #{8-i} | "
       print @board[i].join(' | ')
       puts ' | '
       puts "   ---------------------------------"
