@@ -16,11 +16,4 @@ describe ChessBoard do
         end
     end
     
-    context '#print_board' do
-        subject(:starting_board) { described_class.new }
-        xit 'corretly prints the starting board' do
-            expected_start_output = ''
-            expect(subject.print_board).to eq(expected_start_output)
-        end
-    end
 end
