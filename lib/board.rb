@@ -12,8 +12,11 @@ class ChessBoard
   WHITE_KNIGHT = '♘'
   WHITE_PAWN = '♙'
 
-  WHITE_SPACE = '□' #25A1
-  BLACK_SPACE = '■' #25A0
+  #WHITE_SPACE = '□' #25A1
+  #BLACK_SPACE = '■' #25A0
+  # From https://en.wikipedia.org/wiki/Geometric_Shapes_(Unicode_block)
+  WHITE_SPACE = '◻︎' #U+25FB+VS15
+  BLACK_SPACE = '◼︎' #U+25FC+VS15
 
   BLACK_KING = '♚'
   BLACK_QUEEN = '♛'
@@ -72,11 +75,12 @@ class ChessBoard
 
   def print_board
     8.times do |i|
-      puts "   ---------------------------------" if i == 0
+      puts "   -----------------------------------------" if i == 0
       print " #{8-i} | "
-      print @board[i].join(' | ')
-      puts ' | '
-      puts "   ---------------------------------"
+      #print @board[i].join("\u2003".encode('utf-8'))
+      print @board[i].join('  | ')
+      puts '  | '
+      puts "   -----------------------------------------"
     end
     puts "     A   B   C   D   E   F   G   H"
   end
