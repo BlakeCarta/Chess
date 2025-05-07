@@ -1,90 +1,83 @@
 class ChessBoard
   def initialize
-    @board = Array.new(8) {Array.new(8)}
+    @board = Array.new(8) { Array.new(8) }
     define_piece_constants
   end
   attr_reader :board
 
   def define_piece_constants
     # Unicode chess symbols, more info here: https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
-    @WHITE_KING = '♔'
-    @WHITE_QUEEN ='♕'
-    @WHITE_ROOK = '♖'
-    @WHITE_BISHOP = '♗'
-    @WHITE_KNIGHT = '♘'
-    @WHITE_PAWN = '♙'
+    @white_king = '♔'
+    @white_queen = '♕'
+    @white_rook = '♖'
+    @white_bishop = '♗'
+    @white_knight = '♘'
+    @white_pawn = '♙'
 
-    #WHITE_SPACE = '□' #25A1
-    #BLACK_SPACE = '■' #25A0
+    # WHITE_SPACE = '□' #25A1
+    # BLACK_SPACE = '■' #25A0
     # From https://en.wikipedia.org/wiki/Geometric_Shapes_(Unicode_block)
-    @WHITE_SPACE = '◻︎' #U+25FB+VS15
-    @BLACK_SPACE = '◼︎' #U+25FC+VS15
+    @white_space = '◻︎' # U+25FB+VS15
+    @black_space = '◼︎' # U+25FC+VS15
 
-    @BLACK_KING = '♚'
-    @BLACK_QUEEN = '♛'
-    @BLACK_ROOK = '♜'
-    @BLACK_BISHOP = '♝'
-    @BLACK_KNIGHT = '♞'
-    @BLACK_PAWN = '♟'
+    @black_king = '♚'
+    @black_queen = '♛'
+    @black_rook = '♜'
+    @black_bishop = '♝'
+    @black_knight = '♞'
+    @black_pawn = '♟'
   end
 
   def setup_board
     @board.each_with_index do |item, i|
-      item.each_with_index do |space, j|
-        # even/odd = black, both = white
-        if ((i % 2 != 0) != (j % 2 != 0))
-          @board[i][j] = @BLACK_SPACE
+      item.each_with_index do |_, j|
+        # 1 odd = black, both = white
+        if i.odd? != j.odd?
+          @board[i][j] = @black_space
         else
-          @board[i][j] = @WHITE_SPACE
+          @board[i][j] = @white_space
         end
       end
     end
-    
     setup_black_pieces
     setup_white_pieces
-
     @board
   end
 
   def setup_black_pieces
-    @board[0][0] = @BLACK_ROOK
-    @board[0][1] = @BLACK_KNIGHT
-    @board[0][2] = @BLACK_BISHOP
-    @board[0][3] = @BLACK_QUEEN
-    @board[0][4] = @BLACK_KING
-    @board[0][5] = @BLACK_BISHOP
-    @board[0][6] = @BLACK_KNIGHT
-    @board[0][7] = @BLACK_ROOK
+    @board[0][0] = @black_rook
+    @board[0][1] = @black_knight
+    @board[0][2] = @black_bishop
+    @board[0][3] = @black_queen
+    @board[0][4] = @black_king
+    @board[0][5] = @black_bishop
+    @board[0][6] = @black_knight
+    @board[0][7] = @black_rook
 
-    8.times do |i|
-      @board[1][i] = @BLACK_PAWN
-    end
+    8.times { |i| @board[1][i] = @black_pawn }
   end
 
   def setup_white_pieces
-    @board[7][0] = @WHITE_ROOK
-    @board[7][1] = @WHITE_KNIGHT
-    @board[7][2] = @WHITE_BISHOP
-    @board[7][3] = @WHITE_QUEEN
-    @board[7][4] = @WHITE_KING
-    @board[7][5] = @WHITE_BISHOP
-    @board[7][6] = @WHITE_KNIGHT
-    @board[7][7] = @WHITE_ROOK
+    @board[7][0] = @white_rook
+    @board[7][1] = @white_knight
+    @board[7][2] = @white_bishop
+    @board[7][3] = @white_queen
+    @board[7][4] = @white_king
+    @board[7][5] = @white_bishop
+    @board[7][6] = @white_knight
+    @board[7][7] = @white_rook
 
-    8.times do |i|
-      @board[6][i] = @WHITE_PAWN
-    end
+    8.times { |i| @board[6][i] = @white_pawn }
   end
 
   def print_board
     8.times do |i|
-      puts "   -----------------------------------------" if i == 0
-      print " #{8-i} | "
-      #print @board[i].join("\u2003".encode('utf-8'))
+      puts '   -----------------------------------------' if i.zero?
+      print " #{8 - i} | "
       print @board[i].join('  | ')
       puts '  | '
-      puts "   -----------------------------------------"
+      puts '   -----------------------------------------'
     end
-    puts "     A    B    C    D    E    F    G    H"
+    puts '     A    B    C    D    E    F    G    H'
   end
 end
