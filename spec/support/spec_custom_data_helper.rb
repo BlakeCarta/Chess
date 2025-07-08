@@ -97,7 +97,7 @@ RSpec::Matchers.define :array_equivalent_all_items_of do |expected|
 
   failure_message do |actual|
     actual.each_with_index do |each, index|
-      if each.all_items != actual[index].all_items
+      if (!each.nil? && !actual.nil?) && each.all_items != actual[index].all_items
         "Expected Turn number #{each.turn_number} to be equal to #{actual[index].turn_number},
         Expected white move #{each.white_move} to be equal to #{actual[index].white_move},
         Expected black move #{each.black_move} to be equal to #{actual[index].black_move},

@@ -6,7 +6,7 @@ describe CustomData do
     subject(:data_one) { described_class.new(1, 'e4', 'e5') }
     subject(:data_two) { described_class.new(1, 'e4', 'e5') }
     it 'is true' do
-      expect(data_one).to equivalent_turn_of(data_two)
+      expect(data_one).to equivalent_all_items_of(data_two)
     end
   end
   
