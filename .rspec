@@ -1,2 +1,2 @@
 --require spec_helper
---require spec_custom_data_helper
+--require ./spec/support/spec_custom_data_helper
