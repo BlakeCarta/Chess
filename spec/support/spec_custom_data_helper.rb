@@ -120,10 +120,10 @@ module CustomDataHelper
       actual.each_with_index do |actual_turn_data, index|
         expected_index = expected[index]
         if (actual_turn_data.nil? != expected_index.nil?) || (actual_turn_data&.all_items != expected_index&.all_items)
-          failure_message = "Expected Turn number #{expected_index.turn_number} to be equal to #{actual_turn_data.turn_number}\n"
-          failure_message += "Expected white move #{expected_index.white_move} to be equal to #{actual_turn_data.white_move}\n"
-          failure_message += "Expected black move #{expected_index.black_move} to be equal to #{actual_turn_data.black_move}\n"
-          failure_message += "Expected the comment #{expected_index.comment} to be equal to #{actual_turn_data.comment}\n"
+          failure_message = "Expected Turn number #{expected_index&.turn_number} to be equal to #{actual_turn_data&.turn_number}\n"
+          failure_message += "Expected white move #{expected_index&.white_move} to be equal to #{actual_turn_data&.white_move}\n"
+          failure_message += "Expected black move #{expected_index&.black_move} to be equal to #{actual_turn_data&.black_move}\n"
+          failure_message += "Expected the comment #{expected_index&.comment} to be equal to #{actual_turn_data&.comment}\n"
           break
         end
       end
@@ -135,10 +135,10 @@ module CustomDataHelper
       actual.each_with_index do |actual_turn_data, index|
         expected_index = expected[index]
         if (actual_turn_data.nil? != expected_index.nil?) || (actual_turn_data&.all_items == expected_index&.all_items)
-          failure_message = "Expected Turn number #{expected_index.turn_number} to not be equal to #{actual_turn_data.turn_number}\n"
-          failure_message += "Expected white move #{expected_index.white_move} to not be equal to #{actual_turn_data.white_move}\n"
-          failure_message += "Expected black move #{expected_index.black_move} to not be equal to #{actual_turn_data.black_move}\n"
-          failure_message += "Expected the comment #{expected_index.comment} to not be equal to #{actual_turn_data.comment}\n"
+          failure_message = "Expected Turn number #{expected_index&.turn_number} to not be equal to #{actual_turn_data&.turn_number}\n"
+          failure_message += "Expected white move #{expected_index&.white_move} to not be equal to #{actual_turn_data&.white_move}\n"
+          failure_message += "Expected black move #{expected_index&.black_move} to not be equal to #{actual_turn_data&.black_move}\n"
+          failure_message += "Expected the comment #{expected_index&.comment} to not be equal to #{actual_turn_data&.comment}\n"
           break
         end
       end
