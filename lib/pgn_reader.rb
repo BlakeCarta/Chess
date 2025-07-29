@@ -40,34 +40,38 @@ class PgnReader
     white_move = nil
     black_move = nil
 
+    # Hangle multi line input in a single string
+    # TODO: Clean this up later if possible
+    line = line.join(' ').split(' ').flatten
 
-    line.each do |item|
+
+    line.each do |item| #DEBUG THIS FURTHER LIHE BIG SPACE
       # if Turn start (digit with dot)
       if item.match(/\d+\./) && is_commment == false
         if !current_turn.nil?
           collected_turns[current_turn_num] = current_turn
         end
+        # handle double digits
         if item.match(/\d+\d+\./)
           current_turn_num = item[0..1].to_i
         else
           current_turn_num = item[0].to_i
         end
+        # white move = '.' this could be improved?
         if item.count('.') == 1
           if item[2..-1].match(/\./)
             white_move = item[3..-1]
           else
             white_move = item[2..-1]
           end
+          # black move = '...'
         elsif item.count('.') == 3 || item.count('.') < 1 
-          if item.length > 3
-            black_move = item[4..-1]
-          else
-            black_move = item
-          end
+          black_move = item[4..-1]
         end
       end
 
-      if !white_move.nil? && item.match(/\d+\./)
+      # if white move added and black isnt, but guard against readding white to black
+      if !white_move.nil? && !item.match(/\d+\./) && !item.match('{') && is_commment == false
         black_move = item
       end
 

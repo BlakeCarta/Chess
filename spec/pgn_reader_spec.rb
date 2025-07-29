@@ -1,34 +1,12 @@
 require './lib/pgn_reader.rb'
 require './lib/custom_data.rb'
+require './spec/support/spec_custom_data_helper.rb'
 
 describe PgnReader do
   context '#initialize' do
     subject(:defualt_parser) { described_class.new }
     it 'selects correct defualt file' do
       expect(subject.filename).to eq('example_input')
-    end
-  end
-
-  # no longer needed, refactor or delete later
-  context '#read_example_file' do
-    subject(:example_reader) { described_class.new }
-    xit 'correctly reads the example file' do
-      example_expected_output = ['[Event "F/S Return Match"]',
-                                 '["Site "Belgrade, Serbia JUG""]',
-                                 '[Date "1992.11.04"]',
-                                 '[Round "29"]',
-                                 '[White "Fischer, Robert J."]',
-                                 '[Black "Spassky, Boris V."]',
-                                 '[Result "1/2-1/2"]',
-                                 '[1.e4 e5 2.Nf3 Nc6 3.Bb5 {This opening is called the Ruy Lopez.} 3...a6]',
-                                 '[4.Ba4 Nf6 5.O-O Be7 6.Re1 b5 7.Bb3 d6 8.c3 O-O 9.h3 Nb8 10.d4 Nbd7]',
-                                 '[11.c4 c6 12.cxb5 axb5 13.Nc3 Bb7 14.Bg5 b4 15.Nb1 h6 16.Bh4 c5 17.dxe5]',
-                                 '[Nxe4 18.Bxe7 Qxe7 19.exd6 Qf6 20.Nbd2 Nxd6 21.Nc4 Nxc4 22.Bxc4 Nb6]',
-                                 '[23.Ne5 Rae8 24.Bxf7+ Rxf7 25.Nxf7 Rxe1+ 26.Qxe1 Kxf7 27.Qe3 Qg5 28.Qxg5]',
-                                 '[hxg5 29.b3 Ke6 30.a3 Kd6 31.axb4 cxb4 32.Ra5 Nd5 33.f3 Bc8 34.Kf2 Bf5]',
-                                 '[35.Ra7 g6 36.Ra6+ Kc5 37.Ke1 Nf4 38.g3 Nxh3 39.Kd2 Kb5 40.Rd6 Kc5 41.Ra6]',
-                                 '[Nf2 42.g4 Bd3 43.Re6 1/2-1/2]']
-      expect(subject.read_example_file).to eq(example_expected_output)
     end
   end
 
@@ -49,8 +27,9 @@ describe PgnReader do
       turn_1 = CustomData.new(1, "e4", "e5")
       turn_2 = CustomData.new(2, "Nf3", "Nc6")
       turn_3 = CustomData.new(3, "Bb5", "a6", "This opening is called the Ruy Lopez.")
+
       expected_turn_data = [nil, turn_1, turn_2, turn_3]
-      expect(subject.get_all(example_input)).to array_equivalent_all_items_of(expected_turn_data)
+      expect(subject.get_all(example_input)).to have_array_of_all_items_equal(expected_turn_data)
     end
 
     it 'correctly handles the special characters in the 2nd row data' do
@@ -63,7 +42,7 @@ describe PgnReader do
       turn_9 = CustomData.new(9, "h3", "Nb8")
       turn_10 = CustomData.new(10, "d4", "Nbd7")
       expected_turn_data = [nil, nil, nil, nil, turn_4, turn_5, turn_6, turn_7, turn_8, turn_9, turn_10]
-      expect(subject.get_all(second_row_example_input)).to array_equivalent_all_items_of(expected_turn_data)
+      expect(subject.get_all(second_row_example_input)).to have_array_of_all_items_equal(expected_turn_data)
     end
   end
   
@@ -84,8 +63,8 @@ describe PgnReader do
       turn_20 = CustomData.new(20, "Nbd2", "Nxd6")
       turn_21 = CustomData.new(21, "Nc4", "Nxc4")
       turn_22 = CustomData.new(22, "Bxc4", "Nb6")
-      expected_output = [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, turn_11, turn_12, turn_13, turn_14, turn_15, turn_16, turn_17, turn_18, turn_19, turn_20, turn_21]
-      expect(subject.get_all(multi_line_input)).to array_equivalent_all_items_of(expected_output)
+      expected_output = [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, turn_11, turn_12, turn_13, turn_14, turn_15, turn_16, turn_17, turn_18, turn_19, turn_20, turn_21, turn_22]
+      expect(subject.get_all(multi_line_input)).to have_array_of_all_items_equal(expected_output)
     end
 
     subject(:example_multiple_line_reader) { described_class.new }
@@ -97,12 +76,12 @@ describe PgnReader do
       expected_output[36] = CustomData.new(36, "Ra6+", "Kc5")
       expected_output[37] = CustomData.new(37, "Ke1", "Nf4")
       expected_output[38] = CustomData.new(38, "g3", "Nxh3")
-      expected_output[39] = CustomData.new(39, "Kd3", "Kb5") # This is supposed to be "Kd2"
+      expected_output[39] = CustomData.new(39, "Kd2", "Kb5")
       expected_output[40] = CustomData.new(40, "Rd6", "Kc5")
       expected_output[41] = CustomData.new(41, "Ra6", "Nf2")
       expected_output[42] = CustomData.new(42, "g4", "Bd3")
       expected_output[43] = CustomData.new(43, "Re6")
-      expect(subject.get_all(multi_line_input)).to array_equivalent_all_items_of(expected_output)
+      expect(subject.get_all(multi_line_input)).to have_array_of_all_items_equal(expected_output)
     end
   end
 
