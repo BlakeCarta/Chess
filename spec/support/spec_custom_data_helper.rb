@@ -99,24 +99,35 @@ module CustomDataHelper
 
   RSpec::Matchers.define :have_array_of_all_items_equal do |expected|
     match do |actual|
-      temp_list = []
+      if actual.size != expected.size
+        return false
+      end
+      mismatch_list = []
       actual.each_with_index do |each, index|
         expected_index = expected[index]
-        temp_list = if each.nil? && expected_index.nil?
-                      temp_list << true
+        mismatch_list = if each.nil? && expected_index.nil?
+                      mismatch_list << true
                     elsif !each.nil? && expected_index.nil? || each.nil? && !expected_index.nil?
-                      temp_list << false
+                      #mismatch_list << false
+                      return false
                     else
-                      temp_list << (each.all_items == expected_index.all_items)
+                      if each.all_items != expected_index.all_items
+                        return false
+                      end
+                      mismatch_list << true
                     end
       end
-      temp_list.all?
+      # ensure list is full of truths and not empty because that was giving false positives
+      mismatch_list.all?{ |each| each == true } && !mismatch_list.empty?
     end
 
 
 
     failure_message do |actual|
       failure_message = ""
+      if actual.size != expected.size
+        failure_message = 'Mismatch size between arrays' 
+      end
       actual.each_with_index do |actual_turn_data, index|
         expected_index = expected[index]
         if (actual_turn_data.nil? != expected_index.nil?) || (actual_turn_data&.all_items != expected_index&.all_items)
