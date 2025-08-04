@@ -5,11 +5,7 @@ class PgnReader
     @full_text = nil
     @collected_turns = []
     @headers = { Event: nil, Site: nil, Date: nil, Round: nil, White: nil, Black: nil, Result: nil }
-    @filename = if name.nil?
-                  'example_input'
-                else
-                  name
-                end
+    @filename = name.nil? ? 'example_input' : name
   end
 
   attr_reader :filename
