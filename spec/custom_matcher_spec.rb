@@ -130,5 +130,19 @@ describe CustomData do
       expected_turn_data = [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, turn_11, turn_12, turn_13, turn_14, turn_15, turn_16, turn_17]
       expect(actual_turn_data).not_to have_array_of_all_items_equal(expected_turn_data)
     end
+
+
+    subject(:example_extracted_turn_data) { described_class.new }
+    it 'correctly identifies an array mismatch' do
+      #example_input = ["1.e4", "e2", "2.Nf3", "Nc6", "3.Bb5", "{This opening is called the Ruy Lopez.}", "3...a6"]
+      example_input = ["1.e4", "e5", "2.Nf3", "Nc6", "3.Bb5", "{This", "opening", "is", "called", "the", "Ruy", "Lopez.}", "3...a6"]
+      turn_1 = CustomData.new(1, "e4", "e5")
+      turn_2 = CustomData.new(2, "Nf3", "Nc6")
+      turn_3 = CustomData.new(3, "Bb5", "a6", "This opening is called the Ruy Lopez.")
+
+      expected_turn_data = [nil, turn_1, turn_2, turn_3]
+      actual_turn_data = []
+      expect(actual_turn_data).not_to have_array_of_all_items_equal(expected_turn_data)
+    end
   end
 end
