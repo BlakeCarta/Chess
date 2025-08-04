@@ -56,14 +56,15 @@ class PgnReader
 
       # if both moves set, add them into the array and reset moves
       collected_turns[current_turn] = CustomData.new(current_turn, white_move, black_move, collected_comment)
+      collected_comment = []
       white_move, black_move = nil
     end
     @collected_turns = collected_turns
   end
 
-  # Handle multi line input in a single string
+  # Handle multi line input in a single string and remove headers
   def cleanup_lines(lines)
-    lines.join(' ').split
+    lines.reject{ |each| each.nil? || each[0] == '[' }.join(' ').split
   end
 
   def get_all(lines = nil)
@@ -73,7 +74,7 @@ class PgnReader
   end
 
   def get_headers(lines = nil)
-    lines = @full_text if lines.nil?
+    lines ||= @full_text
 
     lines.each do |line|
       next if line.nil? || line[0] != '['
@@ -97,7 +98,7 @@ class PgnReader
   def special_characters?(text)
     # End of match is a tie
     if text.match('1/2-1/2')
-      @headers[:result] = text
+      @headers[:Result] = text
       return true
     end
     false
