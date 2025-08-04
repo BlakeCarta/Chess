@@ -1,5 +1,6 @@
 require './lib/custom_data'.freeze
 # Reads Portable Game Notation files (.txt) and converts them into Custom Data format
+# Call ::get_all(text_here) to have an array of moves returned
 class PgnReader
   def initialize(name = nil)
     @full_text = nil
