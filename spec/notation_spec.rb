@@ -46,4 +46,30 @@ describe Notation do
       expect(subject.get_special_character(input)).to be false
     end
   end
+
+  subject(:check_destination) { described_class.new }
+  context '#get_destination' do
+    it 'gets the pawns destination' do
+      input = CustomData.new(1, "e4")
+      destination = 'e4'
+      expect(subject.get_destination(input.white_move)).to eq(destination)
+    end
+
+    it 'gets the pawns destination when capturing' do
+      input = CustomData.new(1, nil, "dxc6")
+      destination = 'c6'
+      expect(subject.get_destination(input.black_move)).to eq(destination)
+    end
+
+    it 'handles special characters at the end' do
+      input = CustomData.new(1, "Bb5+")
+      destination = 'b5'
+      expect(subject.get_destination(input.white_move)).to eq(destination)
+    end
+
+    it 'returns nil for nil input' do
+      input = nil
+      expect(subject.get_destination(input)).to be nil
+    end
+  end
 end

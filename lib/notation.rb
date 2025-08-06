@@ -42,4 +42,14 @@ class Notation
     end
     false
   end
+
+  def get_destination(move)
+    return nil if move.nil?
+    has_character = get_special_character(move)
+    if has_character == false || has_character == 'x'
+      move[-2..]
+    else
+      move[-3..-2]
+    end
+  end
 end
