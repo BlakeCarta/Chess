@@ -52,4 +52,12 @@ class Notation
       move[-3..-2]
     end
   end
+
+  # algebraic chess notation to [row, column] for the board class
+  def alg_to_row_col(input)
+    return nil unless input.is_a?(String)
+    column = {a: 0, b: 1, c: 2, d: 3, e: 4, f: 5, g: 6, h: 7}
+    row = [nil, 7, 6, 5, 4, 3, 2, 1, 0]
+    return row[input[1].to_i], column[input[0].to_sym]
+  end
 end

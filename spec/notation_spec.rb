@@ -72,4 +72,38 @@ describe Notation do
       expect(subject.get_destination(input)).to be nil
     end
   end
+
+  subject(:convert_row_rank_alg_to_row_col) { described_class.new }
+  context '#alg_to_row_col' do
+    it 'converts h1 to 7,7' do
+      input = 'h1'
+      output = [7,7]
+      expect(subject.alg_to_row_col(input)).to eq(output)
+    end
+
+    it 'converts a1 to 7,0' do
+      input = 'a1'
+      output = [7,0]
+      expect(subject.alg_to_row_col(input)).to eq(output)
+    end
+
+    it 'converts d1 to 7,3' do
+      input = 'd1'
+      output = [7,3]
+      expect(subject.alg_to_row_col(input)).to eq(output)
+    end
+
+    it 'converts d8 to 0,3' do
+      input = 'd8'
+      output = [0,3]
+      expect(subject.alg_to_row_col(input)).to eq(output)
+    end
+
+    it 'converts c7 to 1,2' do
+      input = 'c7'
+      output = [1,2]
+      expect(subject.alg_to_row_col(input)).to eq(output)
+    end
+  end
+
 end
