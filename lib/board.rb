@@ -80,4 +80,16 @@ class ChessBoard
     end
     puts '     A    B    C    D    E    F    G    H'
   end
+
+  def get_row_column(loaction)
+    #row = location[0]
+    #col = location[1]
+    @board[loaction[0]][loaction[1]]
+  end
+
+  def set_row_column(loaction, piece)
+    #row = location[0]
+    #col = location[1]
+    @board[loaction[0]][loaction[1]] = piece
+  end
 end
