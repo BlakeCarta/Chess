@@ -60,4 +60,13 @@ class Notation
     row = [nil, 7, 6, 5, 4, 3, 2, 1, 0]
     return row[input[1].to_i], column[input[0].to_sym]
   end
+
+  # [row, column] to algebraic chess notation for the board class
+  def row_col_to_alg(input)
+    return nil unless input[0].is_a?(Integer) && input[1].is_a?(Integer)
+    return nil if (input[0] > 8 || input[0] < 0) && (input[1] > 8 || input[1] < 0)
+    row = ['a','b','c','d','e','f','g','h'][input[1]]
+    column = 8-input[0]
+    return row + column.to_s
+  end
 end

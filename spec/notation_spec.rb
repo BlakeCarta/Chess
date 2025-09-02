@@ -106,4 +106,38 @@ describe Notation do
     end
   end
 
+
+  subject(:convert_row_col_to_row_rank) { described_class.new }
+  context '#row_col_to_alg' do
+    it 'converts 7,7 to h1' do
+      output = 'h1'
+      input = [7,7]
+      expect(subject.row_col_to_alg(input)).to eq(output)
+    end
+
+    it 'converts 7,0 to a1' do
+      output = 'a1'
+      input = [7,0]
+      expect(subject.row_col_to_alg(input)).to eq(output)
+    end
+
+    it 'converts 7,3 to d1' do
+      output = 'd1'
+      input = [7,3]
+      expect(subject.row_col_to_alg(input)).to eq(output)
+    end
+
+    it 'converts 0,3 to d8' do
+      output = 'd8'
+      input = [0,3]
+      expect(subject.row_col_to_alg(input)).to eq(output)
+    end
+
+    it 'converts 1,2 to c7' do
+      output = 'c7'
+      input = [1,2]
+      expect(subject.row_col_to_alg(input)).to eq(output)
+    end
+  end
+
 end
