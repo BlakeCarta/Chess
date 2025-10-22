@@ -65,6 +65,7 @@ class Notation
   def row_col_to_alg(input)
     return nil unless input[0].is_a?(Integer) && input[1].is_a?(Integer)
     return nil if (input[0] > 8 || input[0] < 0) && (input[1] > 8 || input[1] < 0)
+    return nil unless input.is_a?(Array)
     row = ['a','b','c','d','e','f','g','h'][input[1]]
     column = 8-input[0]
     return row + column.to_s
