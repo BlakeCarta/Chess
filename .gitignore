@@ -12,6 +12,7 @@
 Notes.txt
 launch.json
 /PGN
+/old
 
 # Used by dotenv library to load environment variables.
 # .env
