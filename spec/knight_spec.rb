@@ -1,16 +1,18 @@
-require_relative '../lib/Pieces/piece.rb'
-require_relative './helpers/board_manager_spec_helper.rb'
+require_relative '../lib/Pieces/piece'
+require_relative './helpers/board_manager_spec_helper'
 
 RSpec.configure do |c|
   c.include BOARD_MANAGER_HELPER, :include_bm_helper
 end
 describe Piece do
   describe 'Piece_functions' do
-    let(:posistion) {[1,0]}
-    let(:type) {'knight'}
     subject { Piece.new(type: type, posistion: posistion, color: 'white') }
+
+    let(:posistion) { [1, 0] }
+    let(:type) { 'knight' }
+
     describe '#get_posistion' do
-      it "returns the original posistion" do
+      it 'returns the original posistion' do
         expected = posistion
         expect(subject.get_posistion).to eq(expected)
       end
@@ -31,8 +33,8 @@ describe Piece do
     end
 
     describe '#icon' do
-      it 'returns the correct icon (K)' do
-        expected = 'K'
+      it 'returns the correct icon (N)' do
+        expected = 'N'
         expect(subject.icon).to eq(expected)
       end
     end
@@ -43,11 +45,11 @@ describe Piece do
       end
 
       it 'correctly stores forced past moves' do
-        expected = [posistion, [2,0], [3,0]]
-        
-        subject.set_new_posistion([2,0])
-        subject.set_new_posistion([3,0])
-        subject.set_new_posistion([4,0])
+        expected = [posistion, [2, 0], [3, 0]]
+
+        subject.set_new_posistion([2, 0])
+        subject.set_new_posistion([3, 0])
+        subject.set_new_posistion([4, 0])
 
         expect(subject.move_history).to eq(expected)
       end
@@ -55,12 +57,13 @@ describe Piece do
   end
 
   describe 'Piece_functions (movements)', :include_bm_helper do
-    let(:empty_square) {'x'}
-    let(:posistion) {[1,0]}
-    let(:type) {'knight'}
     subject(:piece) { Piece.new(type: type, posistion: posistion, color: 'white') }
 
-    before(:each) do   
+    let(:empty_square) { 'x' }
+    let(:posistion) { [1, 0] }
+    let(:type) { 'knight' }
+
+    before do
       @board_manager = double('Board_Manager')
 
       @black_pawn = instance_double('Piece', name: 'pawn', color: 'black')
@@ -77,12 +80,13 @@ describe Piece do
       @white_queen = instance_double('Piece', name: 'queen', color: 'white')
       @white_king = instance_double('Piece', name: 'king', color: 'white')
     end
+
     describe '#get_moves' do
       context 'empty board' do
         it 'returns two moves in a simple example' do
-          #allow(@board_manager).to receive(:get_location) {empty_square}
-          get_location_allow_empty({board_manager: @board_manager})
-          expected = [[0,2],[2,2],[3,1]]
+          # allow(@board_manager).to receive(:get_location) {empty_square}
+          get_location_allow_empty({ board_manager: @board_manager })
+          expected = [[0, 2], [2, 2], [3, 1]]
           return_cords = true
 
           expect(subject.get_moves(@board_manager, return_cords = true)).to match_array(expected)
@@ -90,10 +94,11 @@ describe Piece do
       end
 
       context 'sparse board' do
-        let(:black_posistions) {[[4,7], [7,2], [1,5], [5,1], [2,4]]}
-        let(:white_posistions) {[[6,6], [3,3], [0,0], [0,4]]}
+        let(:black_posistions) { [[4, 7], [7, 2], [1, 5], [5, 1], [2, 4]] }
+        let(:white_posistions) { [[6, 6], [3, 3], [0, 0], [0, 4]] }
+
         it 'accounts for friendly/enemy pieces' do
-          new_posistion = [1,2]
+          new_posistion = [1, 2]
           subject.set_new_posistion(new_posistion)
 
           arguments_hash = { board_manager: @board_manager,
@@ -102,47 +107,43 @@ describe Piece do
                              piece: piece,
                              basic_black_piece: @black_pawn,
                              basic_white_piece: @white_pawn,
-                             posistion: new_posistion
-                            }
+                             posistion: new_posistion }
 
           get_location_allow_all(arguments_hash)
 
-          expected = [[3,1], [2,4], [2,0]]
+          expected = [[3, 1], [2, 4], [2, 0]]
           return_cords = true
 
           expect(subject.get_moves(@board_manager, return_cords)).to match_array(expected)
-          
         end
 
         context 'black piece' do
           subject(:piece) { Piece.new(type: type, posistion: posistion, color: 'black') }
+
           it '(knight) works for both colors' do
-            new_posistion = [1,2]
+            new_posistion = [1, 2]
             subject.set_new_posistion(new_posistion)
 
             arguments_hash = { board_manager: @board_manager,
-                              black_posistions: black_posistions,
-                              white_posistions: white_posistions,
-                              piece: piece,
-                              basic_black_piece: @black_pawn,
-                              basic_white_piece: @white_pawn,
-                              posistion: new_posistion
-                              }
+                               black_posistions: black_posistions,
+                               white_posistions: white_posistions,
+                               piece: piece,
+                               basic_black_piece: @black_pawn,
+                               basic_white_piece: @white_pawn,
+                               posistion: new_posistion }
 
             get_location_allow_all(arguments_hash)
 
-            expected = [[3,3],[3,1],[0,4],[0,0],[2,0]]
+            expected = [[3, 3], [3, 1], [0, 4], [0, 0], [2, 0]]
             return_cords = true
 
             expect(subject.get_moves(@board_manager, return_cords)).to match_array(expected)
           end
         end
-
-      
       end
 
       context 'default board' do
-        before(:each) do
+        before do
           @default_arguments_hash = { board_manager: @board_manager,
                                       black_rook: @black_rook,
                                       white_rook: @white_rook,
@@ -154,38 +155,38 @@ describe Piece do
                                       white_queen: @white_queen,
                                       black_king: @black_king,
                                       white_king: @white_king,
-                                      #piece: piece,
+                                      # piece: piece,
                                       black_pawn: @black_pawn,
-                                      white_pawn: @white_pawn,
-                                      #posistion: new_posistion
-                                    }
-         end
+                                      white_pawn: @white_pawn }
+          # posistion: new_posistion
+        end
 
         context 'white knight' do
           subject(:piece) { Piece.new(type: type, posistion: posistion, color: 'white') }
+
           it 'b1 knight returns 2 valid moves' do
-            new_posistion = [0,1]
+            new_posistion = [0, 1]
             subject.set_new_posistion(new_posistion)
             @default_arguments_hash[:piece] = piece
             @default_arguments_hash[:posistion] = new_posistion
             get_default_board_allow(@default_arguments_hash)
 
-            expected = [[2,0], [2,2]]
-            
+            expected = [[2, 0], [2, 2]]
+
             return_cords = true
 
             expect(subject.get_moves(@board_manager, return_cords)).to match_array(expected)
           end
 
           it 'g1 knight returns 2 valid moves' do
-            new_posistion = [0,6]
+            new_posistion = [0, 6]
             subject.set_new_posistion(new_posistion)
             @default_arguments_hash[:piece] = piece
             @default_arguments_hash[:posistion] = new_posistion
             get_default_board_allow(@default_arguments_hash)
 
-            expected = [[2,5], [2,7]]
-            
+            expected = [[2, 5], [2, 7]]
+
             return_cords = true
 
             expect(subject.get_moves(@board_manager, return_cords)).to match_array(expected)
@@ -194,29 +195,30 @@ describe Piece do
 
         context 'black knight' do
           subject(:piece) { Piece.new(type: type, posistion: posistion, color: 'black') }
+
           it 'b8 knight returns 2 valid moves' do
-            new_posistion = [7,1]
+            new_posistion = [7, 1]
             subject.set_new_posistion(new_posistion)
             @default_arguments_hash[:piece] = piece
             @default_arguments_hash[:posistion] = new_posistion
             get_default_board_allow(@default_arguments_hash)
 
-            expected = [[5,0], [5,2]]
-            
+            expected = [[5, 0], [5, 2]]
+
             return_cords = true
 
             expect(subject.get_moves(@board_manager, return_cords)).to match_array(expected)
           end
 
           it 'g8 knight returns 2 valid moves' do
-            new_posistion = [7,6]
+            new_posistion = [7, 6]
             subject.set_new_posistion(new_posistion)
             @default_arguments_hash[:piece] = piece
             @default_arguments_hash[:posistion] = new_posistion
             get_default_board_allow(@default_arguments_hash)
 
-            expected = [[5,5], [5,7]]
-            
+            expected = [[5, 5], [5, 7]]
+
             return_cords = true
 
             expect(subject.get_moves(@board_manager, return_cords)).to match_array(expected)
