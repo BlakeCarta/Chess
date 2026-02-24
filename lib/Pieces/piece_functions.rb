@@ -1,5 +1,9 @@
 # require_relative 'piece.rb'
+require_relative 'piece_castle'
+
 module Piece_functions
+  include CastleFunctions
+
   def set_new_posistion(new_posistion)
     @root.update_posistion(new_posistion)
   end
@@ -154,121 +158,5 @@ module Piece_functions
 
   def promote
     # do thing
-  end
-
-  def castle_check_from_rooks
-    # king e1
-    return false unless @board_manager.get_location([get_posistion[0], 4]).move_history.empty?
-
-    castle_move = []
-    # check spaces between
-    if move_history.empty? && castle_can_move_right
-      # on the right
-      # return false unless @board_manager.get_location([7, 5]).is_a?(String)
-      # return false unless @board_manager.get_location([7, 6]).is_a?(String)
-
-      castle_move += [get_posistion[0], 5]
-    elsif move_history.empty? && castle_can_move_left
-      # on the left
-      # return false unless @board_manager.get_location([7, 3]).is_a?(String)
-      # return false unless @board_manager.get_location([7, 2]).is_a?(String)
-
-      castle_move += [get_posistion[0], 2]
-    end
-    return false if castle_move.empty?
-
-    castle_move
-  end
-
-  def castle_check_from_king
-    # if color == 'white'
-    # check a1 rook
-    castle_move = []
-    if @board_manager.get_location([get_posistion[0],
-                                    0]).move_history.empty? && castle_can_move_left && move_history.empty?
-      # return false unless @board_manager.get_location([0, 3]).is_a?(String)
-      # return false unless @board_manager.get_location([0, 2]).is_a?(String)
-
-    end
-    # check right rook
-    if @board_manager.get_location([get_posistion[0],
-                                    7]).move_history.empty? && castle_can_move_right && move_history.empty?
-
-      castle_move += [get_posistion[0], 5]
-    end
-    # return false unless @board_manager.get_location([0, 5]).is_a?(String)
-    # return false unless @board_manager.get_location([0, 6]).is_a?(String)
-
-    # elsif color == 'black'
-    #  # check left rook
-    #  if @board_manager.get_location([7, 0]).move_history.empty? && castle_can_move_left
-    #    # return false unless @board_manager.get_location([7, 3]).is_a?(String)
-    #    # return false unless @board_manager.get_location([7, 2]).is_a?(String)
-    #
-    #    castle_move += [7, 2]
-    #  end
-    #  # check right rook
-    #  if @board_manager.get_location([7, 7]).move_history.empty? && castle_can_move_right
-    #    # return false unless @board_manager.get_location([7, 5]).is_a?(String)
-    #    # return false unless @board_manager.get_location([7, 6]).is_a?(String)
-    #
-    #    castle_move += [7, 5]
-    #  end
-    # end
-    return false if castle_move.empty?
-
-    castle_move
-  end
-
-  def can_castle?
-    return false unless castle_moves.empty?
-
-    # can this accidentally default to true?
-    true
-  end
-
-  def castle_moves
-    # check if rook/king
-    return false unless %w[rook king].include?(name)
-    # check if either have moved
-    return false unless move_history.empty?
-
-    castle_move = []
-    if name == 'rook'
-      castle_move = castle_check_from_rooks
-    elsif name == 'king'
-      castle_move = castle_check_from_king
-    end
-
-    # return false if castle_move.empty?
-
-    castle_move
-    # what does castle_move look like and what does it actually do?
-    # like how do I work with it
-    # check if any pieces are between the two
-    # check if in check/move through check/end in check
-    # -- check threatend squares to see
-    # if all valid
-    # return the special move(?)
-    # invoke the castle func when chosen
-    # castle func will have to move the chosen piece(rook/king)
-    # -- and move the other relevant piece to location
-  end
-
-  def castle_can_move_left
-    @board_manager.get_location(get_posistion[0], 3).is_a?(String) &&
-      @board_manager.get_location(get_posistion[0], 2).is_a?(String) # &&
-    # @board_manager.get_location(get_posistion[0], 1).move_history.empty?
-  end
-
-  def castle_can_move_right
-    @board_manager.get_location(get_posistion[0], 5).is_a?(String) &&
-      @board_manager.get_location(get_posistion[0], 6).is_a?(String) # &&
-    # @board_manager.get_location(get_posistion[0], 7).move_history.empty?
-  end
-
-  def add_castle_move(king_posistion, rook_posistion)
-    { king_original_posistion: king_posistion, rook_original_posistion: rook_posistion, new_king_posistion: 'shrug',
-      new_rook_posistion: 'idkman' }
   end
 end
