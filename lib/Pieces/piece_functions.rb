@@ -43,6 +43,8 @@ module Piece_functions
               depth_moves
             end
 
+    moves += castle_moves if can_castle?
+
     # reset board manager, not optimal to store a ref to board when not needed
     @board_manager = nil
 
