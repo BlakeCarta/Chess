@@ -10,9 +10,9 @@ module CastleFunctions
     # if king hasnt moved
     if @board_manager.get_location([get_posistion[0], 4]).move_history.empty?
       if castle_can_move_right
-        castle_move += [get_posistion[0], 5]
+        castle_move += create_right_castle_move
       elsif castle_can_move_left
-        castle_move += [get_posistion[0], 2]
+        castle_move += create_left_castle_move
       end
     end
 
@@ -24,12 +24,12 @@ module CastleFunctions
     castle_move = []
     if @board_manager.get_location([get_posistion[0], 0]).move_history.empty? && castle_can_move_left
 
-      castle_move += [get_posistion[0], 2]
+      castle_move += create_left_castle_move
     end
     # check right rook
     if @board_manager.get_location([get_posistion[0], 7]).move_history.empty? && castle_can_move_right
 
-      castle_move += [get_posistion[0], 5]
+      castle_move += create_right_castle_move
     end
     # return false if castle_move.empty?
 
@@ -63,8 +63,8 @@ module CastleFunctions
 
   def castle_can_move_left
     @board_manager.get_location(get_posistion[0], 3).is_a?(String) &&
-      @board_manager.get_location(get_posistion[0], 2).is_a?(String) # &&
-    # @board_manager.get_location(get_posistion[0], 1).move_history.empty?
+      @board_manager.get_location(get_posistion[0], 2).is_a?(String) &&
+      @board_manager.get_location(get_posistion[0], 1).is_a?(String)
   end
 
   def castle_can_move_right
@@ -73,8 +73,30 @@ module CastleFunctions
     # @board_manager.get_location(get_posistion[0], 7).move_history.empty?
   end
 
-  def add_castle_move(king_posistion, rook_posistion)
-    { king_original_posistion: king_posistion, rook_original_posistion: rook_posistion, new_king_posistion: 'shrug',
-      new_rook_posistion: 'idkman' }
+  def add_castle_move(original_king_posistion, original_rook_posistion, new_king_posistion, new_rook_posistion)
+    { king_original_posistion: original_king_posistion, rook_original_posistion: original_rook_posistion,
+      new_king_posistion: new_king_posistion, new_rook_posistion: new_rook_posistion }
+  end
+
+  def create_right_castle_move
+    # king moves to 6, rook moves to 5
+    original_king_posistion = [get_posistion[0], 4]
+    original_rook_posistion = [get_posistion[0], 7]
+    new_king_posistion = [get_posistion[0], 6]
+    new_rook_posistion = [get_posistion[0], 5]
+
+    add_castle_move(original_king_posistion, original_rook_posistion, new_king_posistion,
+                    new_rook_posistion)
+  end
+
+  def create_left_castle_move
+    # king moves to 2, rook moves to 3
+    original_king_posistion = [get_posistion[0], 4]
+    original_rook_posistion = [get_posistion[0], 0]
+    new_king_posistion = [get_posistion[0], 2]
+    new_rook_posistion = [get_posistion[0], 3]
+
+    add_castle_move(original_king_posistion, original_rook_posistion, new_king_posistion,
+                    new_rook_posistion)
   end
 end
