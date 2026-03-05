@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # code related to checking and getting castle moves for a piece
 module CastleFunctions
   # rook checks on the king
@@ -7,9 +9,9 @@ module CastleFunctions
     castle_move = []
     # if king hasnt moved
     if @board_manager.get_location([get_posistion[0], 4]).move_history.empty?
-      if move_history.empty? && castle_can_move_right
+      if castle_can_move_right
         castle_move += [get_posistion[0], 5]
-      elsif move_history.empty? && castle_can_move_left
+      elsif castle_can_move_left
         castle_move += [get_posistion[0], 2]
       end
     end
@@ -20,14 +22,12 @@ module CastleFunctions
   # king checks on the rooks
   def castle_moves_from_king
     castle_move = []
-    if @board_manager.get_location([get_posistion[0],
-                                    0]).move_history.empty? && castle_can_move_left && move_history.empty?
+    if @board_manager.get_location([get_posistion[0], 0]).move_history.empty? && castle_can_move_left
 
       castle_move += [get_posistion[0], 2]
     end
     # check right rook
-    if @board_manager.get_location([get_posistion[0],
-                                    7]).move_history.empty? && castle_can_move_right && move_history.empty?
+    if @board_manager.get_location([get_posistion[0], 7]).move_history.empty? && castle_can_move_right
 
       castle_move += [get_posistion[0], 5]
     end
@@ -37,23 +37,23 @@ module CastleFunctions
   end
 
   def can_castle?
-    return false unless castle_moves.empty?
+    return true unless castle_moves.empty?
 
-    # can this accidentally default to true?
-    true
+    false
   end
 
   def castle_moves
-    # check if rook/king
-    return false unless %w[rook king].include?(name)
-    # check if either have moved
-    return false unless move_history.empty?
-
     castle_move = []
+
+    # check if rook/king
+    return castle_move unless %w[rook king].include?(name)
+    # check if either have moved
+    return castle_move unless move_history.empty?
+
     if name == 'rook'
-      castle_move = get_castle_moves_from_rooks
+      castle_move = castle_moves_from_rooks
     elsif name == 'king'
-      castle_move = get_castle_moves_from_king
+      castle_move = castle_moves_from_king
     end
 
     castle_move
