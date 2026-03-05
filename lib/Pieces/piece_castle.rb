@@ -1,6 +1,7 @@
 # code related to checking and getting castle moves for a piece
 module CastleFunctions
-  def get_castle_moves_from_rooks
+  # rook checks on the king
+  def castle_moves_from_rooks
     # return false unless @board_manager.get_location([get_posistion[0], 4]).move_history.empty?
 
     castle_move = []
@@ -16,7 +17,8 @@ module CastleFunctions
     castle_move
   end
 
-  def get_castle_moves_from_king
+  # king checks on the rooks
+  def castle_moves_from_king
     castle_move = []
     if @board_manager.get_location([get_posistion[0],
                                     0]).move_history.empty? && castle_can_move_left && move_history.empty?
@@ -56,6 +58,8 @@ module CastleFunctions
 
     castle_move
   end
+
+  private
 
   def castle_can_move_left
     @board_manager.get_location(get_posistion[0], 3).is_a?(String) &&
