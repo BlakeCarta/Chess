@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-# code related to checking and getting castle moves for a piece
+# Checks and gets castle moves for king or rook
 module CastleFunctions
   # rook checks on the king
   def castle_moves_from_rooks
-    # return false unless @board_manager.get_location([get_posistion[0], 4]).move_history.empty?
-
     castle_move = []
     # if king hasnt moved
     if @board_manager.get_location([get_posistion[0], 4]).move_history.empty?
@@ -31,7 +29,6 @@ module CastleFunctions
 
       castle_move += create_right_castle_move
     end
-    # return false if castle_move.empty?
 
     castle_move
   end
@@ -69,8 +66,7 @@ module CastleFunctions
 
   def castle_can_move_right
     @board_manager.get_location(get_posistion[0], 5).is_a?(String) &&
-      @board_manager.get_location(get_posistion[0], 6).is_a?(String) # &&
-    # @board_manager.get_location(get_posistion[0], 7).move_history.empty?
+      @board_manager.get_location(get_posistion[0], 6).is_a?(String)
   end
 
   def add_castle_move(original_king_posistion, original_rook_posistion, new_king_posistion, new_rook_posistion)
