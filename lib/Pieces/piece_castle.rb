@@ -8,9 +8,9 @@ module CastleFunctions
     king = @board_manager.get_location([get_posistion[0], 4])
     # if king hasnt moved
     if !king.is_a?(String) && king.move_history.empty?
-      if castle_can_move_right
+      if get_posistion[1] == 7 && castle_can_move_right
         castle_move << create_right_castle_move
-      elsif castle_can_move_left
+      elsif get_posistion[1] == 0 && castle_can_move_left
         castle_move << create_left_castle_move
       end
     end
