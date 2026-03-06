@@ -28,7 +28,7 @@ module CastleFunctions
       castle_move << create_left_castle_move
     end
     # check right rook
-    if !right_rook.is_a?(String) && right_hook.move_history.empty? && castle_can_move_right
+    if !right_rook.is_a?(String) && right_rook.move_history.empty? && castle_can_move_right
 
       castle_move << create_right_castle_move
     end
