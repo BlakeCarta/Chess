@@ -53,7 +53,20 @@ module Piece_functions
     # but a rewrite would could make this better
     return moves unless return_cordinates == true
 
-    moves.map { |pieces| pieces.get_posistion }
+    # moves.map { |pieces| pieces.get_posistion }
+
+    moves.map do |pieces|
+      if pieces.is_a?(Hash)
+        # if name == 'king'
+        #  pieces[:new_king_posistion]
+        # else
+        #  pieces[:new_rook_posistion]
+        # end
+        pieces
+      else
+        pieces.get_posistion
+      end
+    end
   end
 
   private

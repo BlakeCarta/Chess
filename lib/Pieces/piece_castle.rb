@@ -9,9 +9,9 @@ module CastleFunctions
     # if king hasnt moved
     if !king.is_a?(String) && king.move_history.empty?
       if castle_can_move_right
-        castle_move += create_right_castle_move
+        castle_move << create_right_castle_move
       elsif castle_can_move_left
-        castle_move += create_left_castle_move
+        castle_move << create_left_castle_move
       end
     end
 
@@ -22,15 +22,15 @@ module CastleFunctions
   def castle_moves_from_king
     castle_move = []
     left_rook = @board_manager.get_location([get_posistion[0], 0])
-    right_hook = @board_manager.get_location([get_posistion[0], 7])
+    right_rook = @board_manager.get_location([get_posistion[0], 7])
     if !left_rook.is_a?(String) && left_rook.move_history.empty? && castle_can_move_left
 
-      castle_move += create_left_castle_move
+      castle_move << create_left_castle_move
     end
     # check right rook
-    if !right_hook.is_a?(String) && right_hook.move_history.empty? && castle_can_move_right
+    if !right_rook.is_a?(String) && right_hook.move_history.empty? && castle_can_move_right
 
-      castle_move += create_right_castle_move
+      castle_move << create_right_castle_move
     end
 
     castle_move

@@ -117,8 +117,37 @@ describe Piece do
           expect(subject.get_moves(@board_manager, return_cords)).to match_array(expected)
         end
 
-        xit '(king) can castle' do
-          # something
+        context 'castle' do
+          subject(:piece) { Piece.new(type: type, posistion: [0, 4], color: 'white') }
+
+          it 'white (king) can castle left' do
+            # new_posistion = [0, 4]
+            # subject.set_new_posistion(new_posistion)
+
+            arguments_hash = { board_manager: @board_manager,
+                               black_posistions: [[]],
+                               white_posistions: [[0, 0]],
+                               piece: piece,
+                               basic_black_piece: @empty_square,
+                               basic_white_piece: @white_rook,
+                               posistion: [0, 4] }
+
+            get_location_allow_all(arguments_hash)
+            allow(@white_rook).to receive(:move_history).and_return([])
+
+            # get_location_allow_empty({ board_manager: @board_manager })
+            # allow(@board_manager).to receive(:get_location) { @empty_square }
+
+            # allow(@board_manager).to receive(:get_location).with([0, 0]).and_return(@white_rook)
+
+            castle_move = { king_original_posistion: [0, 4], rook_original_posistion: [0, 0],
+                            new_king_posistion: [0, 2], new_rook_posistion: [0, 3] }
+
+            expected = [[0, 3], [0, 5], [1, 4], [1, 3], [1, 5], castle_move]
+            return_cords = true
+
+            expect(subject.get_moves(@board_manager, return_cords)).to match_array(expected)
+          end
         end
 
         context 'black piece' do
