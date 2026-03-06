@@ -278,9 +278,6 @@ describe Piece do
           get_location_allow_all(arguments_hash)
           allow(@black_king).to receive(:move_history).and_return([])
 
-          # castle_move_left = { king_original_posistion: [0, 4], rook_original_posistion: [0, 0],
-          #                     new_king_posistion: [0, 2], new_rook_posistion: [0, 3] }
-
           expected = [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 1], [7, 2], [7, 3]]
           return_cords = true
 
