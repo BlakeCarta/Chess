@@ -69,7 +69,7 @@ module EnPassantFunctions
     captured_pawn = @board_manager.get_location(target_posistion)
     return false if captured_pawn.name != 'pawn'
 
-    if captured_pawn.move_history.size == 1
+    if captured_pawn.move_history.flatten.count { |element| element.is_a?(Integer) } == 2
       if captured_pawn.color == 'black'
         return true if target_posistion[0] == 4
       elsif captured_pawn.color == 'white'
