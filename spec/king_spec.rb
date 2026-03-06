@@ -121,9 +121,6 @@ describe Piece do
           subject(:piece) { Piece.new(type: type, posistion: [0, 4], color: 'white') }
 
           it 'white (king) can castle left' do
-            # new_posistion = [0, 4]
-            # subject.set_new_posistion(new_posistion)
-
             arguments_hash = { board_manager: @board_manager,
                                black_posistions: [[]],
                                white_posistions: [[0, 0]],
@@ -135,11 +132,6 @@ describe Piece do
             get_location_allow_all(arguments_hash)
             allow(@white_rook).to receive(:move_history).and_return([])
 
-            # get_location_allow_empty({ board_manager: @board_manager })
-            # allow(@board_manager).to receive(:get_location) { @empty_square }
-
-            # allow(@board_manager).to receive(:get_location).with([0, 0]).and_return(@white_rook)
-
             castle_move = { king_original_posistion: [0, 4], rook_original_posistion: [0, 0],
                             new_king_posistion: [0, 2], new_rook_posistion: [0, 3] }
 
@@ -150,9 +142,6 @@ describe Piece do
           end
 
           it 'white (king) can castle right' do
-            # new_posistion = [0, 4]
-            # subject.set_new_posistion(new_posistion)
-
             arguments_hash = { board_manager: @board_manager,
                                black_posistions: [[]],
                                white_posistions: [[0, 7]],
@@ -164,11 +153,6 @@ describe Piece do
             get_location_allow_all(arguments_hash)
             allow(@white_rook).to receive(:move_history).and_return([])
 
-            # get_location_allow_empty({ board_manager: @board_manager })
-            # allow(@board_manager).to receive(:get_location) { @empty_square }
-
-            # allow(@board_manager).to receive(:get_location).with([0, 0]).and_return(@white_rook)
-
             castle_move = { king_original_posistion: [0, 4], rook_original_posistion: [0, 7],
                             new_king_posistion: [0, 6], new_rook_posistion: [0, 5] }
 
@@ -179,9 +163,6 @@ describe Piece do
           end
 
           it 'white (king) can castle right & left' do
-            # new_posistion = [0, 4]
-            # subject.set_new_posistion(new_posistion)
-
             arguments_hash = { board_manager: @board_manager,
                                black_posistions: [[]],
                                white_posistions: [[0, 7], [0, 0]],
@@ -192,11 +173,6 @@ describe Piece do
 
             get_location_allow_all(arguments_hash)
             allow(@white_rook).to receive(:move_history).and_return([])
-
-            # get_location_allow_empty({ board_manager: @board_manager })
-            # allow(@board_manager).to receive(:get_location) { @empty_square }
-
-            # allow(@board_manager).to receive(:get_location).with([0, 0]).and_return(@white_rook)
 
             castle_move_right = { king_original_posistion: [0, 4], rook_original_posistion: [0, 7],
                                   new_king_posistion: [0, 6], new_rook_posistion: [0, 5] }
@@ -211,9 +187,6 @@ describe Piece do
           end
 
           it 'white (king) cant castle when right has moved & when left is blocked' do
-            # new_posistion = [0, 4]
-            # subject.set_new_posistion(new_posistion)
-
             arguments_hash = { board_manager: @board_manager,
                                black_posistions: [[0, 2]],
                                white_posistions: [[2, 7], [0, 0]],
@@ -225,17 +198,6 @@ describe Piece do
             get_location_allow_all(arguments_hash)
             allow(@white_rook).to receive(:move_history).and_return([])
 
-            # get_location_allow_empty({ board_manager: @board_manager })
-            # allow(@board_manager).to receive(:get_location) { @empty_square }
-
-            # allow(@board_manager).to receive(:get_location).with([0, 0]).and_return(@white_rook)
-
-            # castle_move_right = { king_original_posistion: [0, 4], rook_original_posistion: [0, 7],
-            # new_king_posistion: [0, 6], new_rook_posistion: [0, 5] }
-
-            # castle_move_left = { king_original_posistion: [0, 4], rook_original_posistion: [0, 0],
-            # new_king_posistion: [0, 2], new_rook_posistion: [0, 3] }
-
             expected = [[0, 3], [0, 5], [1, 4], [1, 3], [1, 5]]
             return_cords = true
 
@@ -243,9 +205,6 @@ describe Piece do
           end
 
           it 'white (king) cant castle right when blocked & can castle left' do
-            # new_posistion = [0, 4]
-            # subject.set_new_posistion(new_posistion)
-
             arguments_hash = { board_manager: @board_manager,
                                black_posistions: [[0, 5]],
                                white_posistions: [[0, 7], [0, 0]],
@@ -256,14 +215,6 @@ describe Piece do
 
             get_location_allow_all(arguments_hash)
             allow(@white_rook).to receive(:move_history).and_return([])
-
-            # get_location_allow_empty({ board_manager: @board_manager })
-            # allow(@board_manager).to receive(:get_location) { @empty_square }
-
-            # allow(@board_manager).to receive(:get_location).with([0, 0]).and_return(@white_rook)
-
-            # castle_move_right = { king_original_posistion: [0, 4], rook_original_posistion: [0, 7],
-            # new_king_posistion: [0, 6], new_rook_posistion: [0, 5] }
 
             castle_move_left = { king_original_posistion: [0, 4], rook_original_posistion: [0, 0],
                                  new_king_posistion: [0, 2], new_rook_posistion: [0, 3] }
@@ -316,17 +267,6 @@ describe Piece do
               get_location_allow_all(arguments_hash)
               allow(@black_rook).to receive(:move_history).and_return([])
 
-              # get_location_allow_empty({ board_manager: @board_manager })
-              # allow(@board_manager).to receive(:get_location) { @empty_square }
-
-              # allow(@board_manager).to receive(:get_location).with([0, 0]).and_return(@white_rook)
-
-              # castle_move_right = { king_original_posistion: [7, 4], rook_original_posistion: [7, 7],
-              #                      new_king_posistion: [7, 6], new_rook_posistion: [7, 5] }
-              #
-              # castle_move_left = { king_original_posistion: [7, 4], rook_original_posistion: [7, 0],
-              #                     new_king_posistion: [7, 2], new_rook_posistion: [7, 3] }
-
               expected = [[7, 3], [7, 5], [7, 4], [5, 4], [5, 5], [5, 3], [6, 3], [6, 5]]
               return_cords = true
 
@@ -334,9 +274,6 @@ describe Piece do
             end
 
             it 'black (king) can castle left when right blocked' do
-              # new_posistion = [6, 4]
-              # subject.set_new_posistion(new_posistion)
-
               arguments_hash = { board_manager: @board_manager,
                                  black_posistions: [[7, 7], [7, 0]],
                                  white_posistions: [[7, 5]],
@@ -348,14 +285,6 @@ describe Piece do
               get_location_allow_all(arguments_hash)
               allow(@black_rook).to receive(:move_history).and_return([])
 
-              # get_location_allow_empty({ board_manager: @board_manager })
-              # allow(@board_manager).to receive(:get_location) { @empty_square }
-
-              # allow(@board_manager).to receive(:get_location).with([0, 0]).and_return(@white_rook)
-
-              # castle_move_right = { king_original_posistion: [7, 4], rook_original_posistion: [7, 7],
-              #                      new_king_posistion: [7, 6], new_rook_posistion: [7, 5] }
-              #
               castle_move_left = { king_original_posistion: [7, 4], rook_original_posistion: [7, 0],
                                    new_king_posistion: [7, 2], new_rook_posistion: [7, 3] }
 
