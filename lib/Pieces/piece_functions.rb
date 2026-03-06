@@ -1,8 +1,10 @@
 # require_relative 'piece.rb'
 require_relative 'piece_castle'
+require_relative 'piece_en_passant'
 
 module Piece_functions
   include CastleFunctions
+  include EnPassantFunctions
 
   def set_new_posistion(new_posistion)
     @root.update_posistion(new_posistion)
@@ -44,6 +46,7 @@ module Piece_functions
             end
 
     moves += castle_moves if can_castle?
+    moves += en_passant if can_en_passant?
 
     # reset board manager, not optimal to store a ref to board when not needed
     @board_manager = nil
