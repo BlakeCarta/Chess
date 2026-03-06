@@ -4,9 +4,11 @@ class Board_Manager
   def initialize
     @board = Game_Board.new
     @capture_history = []
+    @full_move_history = []
   end
 
   attr_reader :capture_history
+  attr_accessor :full_move_history
 
   def get_board
     @board.gameboard
