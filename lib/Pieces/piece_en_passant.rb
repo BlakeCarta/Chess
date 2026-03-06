@@ -8,13 +8,15 @@ module EnPassantFunctions
   # Must use capture that turn
 
   def can_en_passant?
+    return false unless is_pawn?
+
     get_target_posistions.each do |target_posistion|
       check_en_passant?(target_posistion)
     end
   end
 
   def check_en_passant?(target_posistion)
-    is_pawn? && on_capturing_rank? && captured_pawn_moved_2_spaces?(target_posistion) && captured_pawn_next_to_capturing_pawn?(target_posistion) && !couldve_used_capture_last_turn?
+    on_capturing_rank? && captured_pawn_moved_2_spaces?(target_posistion) && captured_pawn_next_to_capturing_pawn?(target_posistion) && !couldve_used_capture_last_turn?
   end
 
   def en_passant
@@ -39,13 +41,12 @@ module EnPassantFunctions
   end
 
   def get_target_posistions
-    target_posistions = [get_posistion[0], get_posistion[1] + 1], [get_posistion[0], get_posistion[1] - 1].delete_if do |pos|
-      pos.each do |cord|
-        cord > 7 || cord < 0
-      end
+    target_posistions = [get_posistion[0], get_posistion[1] + 1], [get_posistion[0], get_posistion[1] - 1]
+    target_posistions.select do |posistion|
+      posistion.map do |cord|
+        cord.between?(0, 7)
+      end && !@board_manager.get_location(posistion).is_a?(String) && @board_manager.get_location(posistion).name == 'pawn'
     end
-
-    target_posistions.select { |posistion| posistion.name == 'pawn' }
   end
 
   def is_pawn?
