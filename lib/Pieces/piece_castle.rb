@@ -50,10 +50,12 @@ module CastleFunctions
     # check if either have moved
     return castle_move unless move_history.empty?
 
-    if name == 'rook'
-      castle_move = castle_moves_from_rooks
-    elsif name == 'king'
-      castle_move = castle_moves_from_king
+    if (color == 'white' && get_posistion[0] == 0) || (color == 'black' && get_posistion[0] == 7)
+      if name == 'rook'
+        castle_move = castle_moves_from_rooks
+      elsif name == 'king'
+        castle_move = castle_moves_from_king
+      end
     end
 
     castle_move
@@ -62,14 +64,14 @@ module CastleFunctions
   private
 
   def castle_can_move_left
-    @board_manager.get_location(get_posistion[0], 3).is_a?(String) &&
-      @board_manager.get_location(get_posistion[0], 2).is_a?(String) &&
-      @board_manager.get_location(get_posistion[0], 1).is_a?(String)
+    @board_manager.get_location([get_posistion[0], 3]).is_a?(String) &&
+      @board_manager.get_location([get_posistion[0], 2]).is_a?(String) &&
+      @board_manager.get_location([get_posistion[0], 1]).is_a?(String)
   end
 
   def castle_can_move_right
-    @board_manager.get_location(get_posistion[0], 5).is_a?(String) &&
-      @board_manager.get_location(get_posistion[0], 6).is_a?(String)
+    @board_manager.get_location([get_posistion[0], 5]).is_a?(String) &&
+      @board_manager.get_location([get_posistion[0], 6]).is_a?(String)
   end
 
   def add_castle_move(original_king_posistion, original_rook_posistion, new_king_posistion, new_rook_posistion)
