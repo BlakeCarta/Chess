@@ -188,6 +188,36 @@ describe Piece do
             expect(subject.get_moves(@board_manager, return_cords)).to match_array(expected)
           end
         end
+
+        context 'white en_passnat' do
+          subject(:piece) { Piece.new(type: type, posistion: [0, 2], color: 'white') }
+
+          it '(pawn) can en-passant', :include_bm_helper do
+            new_posistion = [3, 2]
+            subject.set_new_posistion(new_posistion)
+            new_posistion = [4, 2]
+            subject.set_new_posistion(new_posistion)
+
+            en_passant = { original_capturing_posistion: new_posistion, original_captured_posistion: [4, 3],
+                           new_capturing_posistion: [5, 3] }
+
+            return_cords = true
+            expected = [[5, 2], en_passant]
+
+            arguments_hash = { board_manager: @board_manager,
+                               black_posistions: [[4, 3], [5, 4]],
+                               white_posistions: [],
+                               piece: piece,
+                               basic_black_piece: @black_pawn,
+                               basic_white_piece: @white_pawn }
+
+            get_location_allow_all(arguments_hash)
+            allow(@black_pawn).to receive(:move_history).and_return([6, 4])
+            allow(@board_manager).to receive(:full_move_history).and_return([6, 4])
+
+            expect(subject.get_moves(@board_manager, return_cords)).to match_array(expected)
+          end
+        end
       end
     end
 
