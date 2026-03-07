@@ -25,6 +25,27 @@ describe Input_Manager do
       expect(subject.convert_posistion_to_row_col(input)).to eq(expected)
     end
 
+    it 'returns 0,0 for a1' do
+      input = 'a1'
+      expected = [0, 0]
+
+      expect(subject.convert_posistion_to_row_col(input)).to eq(expected)
+    end
+
+    it 'returns 7,7 for h8' do
+      input = 'h8'
+      expected = [7, 7]
+
+      expect(subject.convert_posistion_to_row_col(input)).to eq(expected)
+    end
+
+    it 'returns 4,7 for h5' do
+      input = 'h5'
+      expected = [4, 7]
+
+      expect(subject.convert_posistion_to_row_col(input)).to eq(expected)
+    end
+
     it 'returns nil for invalid input' do
       input = 'el'
 
