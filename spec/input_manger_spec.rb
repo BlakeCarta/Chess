@@ -30,5 +30,17 @@ describe Input_Manager do
 
       expect(subject.convert_posistion_to_row_col(input)).to be_nil
     end
+
+    it 'returns nil for no input' do
+      input = ''
+
+      expect(subject.convert_posistion_to_row_col(input)).to be_nil
+    end
+
+    it 'returns nil for gibberish' do
+      input = 'thebluefox'
+
+      expect(subject.convert_posistion_to_row_col(input)).to be_nil
+    end
   end
 end
