@@ -16,7 +16,7 @@ module EnPassantFunctions
   end
 
   def check_en_passant?(target_posistion)
-    on_capturing_rank? && captured_pawn_moved_2_spaces?(target_posistion) && captured_pawn_next_to_capturing_pawn?(target_posistion) && !couldve_used_capture_last_turn?
+    on_capturing_rank? && captured_pawn_moved_2_spaces?(target_posistion) && captured_pawn_next_to_capturing_pawn?(target_posistion)
   end
 
   def en_passant
@@ -30,14 +30,17 @@ module EnPassantFunctions
   private
 
   def make_en_passant(pawn_target_posistion)
+    capture_available = true
     new_posistion = if color == 'white'
                       [pawn_target_posistion[0] + 1, pawn_target_posistion[1]]
                     else
                       [pawn_target_posistion[0] - 1, pawn_target_posistion[1]]
                     end
 
+    capture_available = false if couldve_used_capture_last_turn?
+
     { original_capturing_posistion: get_posistion, original_captured_posistion: pawn_target_posistion,
-      new_capturing_posistion: new_posistion }
+      new_capturing_posistion: new_posistion, can_capture: capture_available }
   end
 
   def get_target_posistions
@@ -84,6 +87,6 @@ module EnPassantFunctions
   end
 
   def couldve_used_capture_last_turn?
-    @board_manager.full_move_history[-2] == move_history.last
+    @board_manager.full_move_history[-2] == get_posistion
   end
 end
