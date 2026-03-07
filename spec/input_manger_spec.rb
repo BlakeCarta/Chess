@@ -17,6 +17,54 @@ describe Input_Manager do
     end
   end
 
+  describe '#convert_row_col_to_posistion' do
+    it 'returns e4 for 3,4' do
+      input = [3, 4]
+      expected = 'e4'
+
+      expect(subject.convert_row_col_to_posistion(input)).to eq(expected)
+    end
+
+    it 'returns a1 for 0,0' do
+      input = [0, 0]
+      expected = 'a1'
+
+      expect(subject.convert_row_col_to_posistion(input)).to eq(expected)
+    end
+
+    it 'returns h8 for 7,7' do
+      input = [7, 7]
+      expected = 'h8'
+
+      expect(subject.convert_row_col_to_posistion(input)).to eq(expected)
+    end
+
+    it 'returns h5 for 4,7' do
+      input = [4, 7]
+      expected = 'h5'
+
+      expect(subject.convert_row_col_to_posistion(input)).to eq(expected)
+    end
+
+    it 'returns nil for invalid input' do
+      input = ['el']
+
+      expect(subject.convert_row_col_to_posistion(input)).to be_nil
+    end
+
+    it 'returns nil for no input' do
+      input = []
+
+      expect(subject.convert_row_col_to_posistion(input)).to be_nil
+    end
+
+    it 'returns nil for gibberish' do
+      input = [1, 'thebluefox']
+
+      expect(subject.convert_row_col_to_posistion(input)).to be_nil
+    end
+  end
+
   describe '#convert_posistion_to_row_col' do
     it 'returns 3,4 for e4' do
       input = 'e4'

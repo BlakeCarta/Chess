@@ -14,4 +14,14 @@ module Input_Manager
 
     [row, column]
   end
+
+  def self.convert_row_col_to_posistion(input_text)
+    columns = { 0 => 'a', 1 => 'b', 2 => 'c', 3 => 'd', 4 => 'e', 5 => 'f', 6 => 'g', 7 => 'h' }
+    column = columns[input_text[1]]
+    row = input_text[0]&.to_i&.+ 1
+
+    return nil if column.nil? || row.nil? || !row.between?(1, 8)
+
+    [column, row].join('')
+  end
 end
