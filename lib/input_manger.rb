@@ -1,8 +1,15 @@
 module Input_Manager
-  def self.get_input
-    target = [3, 0]
-    current = [1, 1]
-    [target, current]
+  def self.get_input(input_text)
+    # target = [3, 0]
+    # current = [1, 1]
+    # [target, current]
+    return update_action(input_text) if is_user_actions?(input_text)
+
+    convert_posistion_to_row_col(input_text)
+  end
+
+  def self.get_current_mode
+    @current_mode
   end
 
   def self.convert_posistion_to_row_col(input_text)
@@ -36,5 +43,12 @@ module Input_Manager
 
   def self.user_action(input_text)
     input_text.chomp.downcase
+  end
+
+  private
+
+  def self.update_action(input_text)
+    # placeholder, meant to update state, i.e. move mode, select mode
+    @current_mode = user_action(input_text)
   end
 end

@@ -3,17 +3,51 @@ describe Input_Manager do
   subject { Input_Manager }
 
   describe '#get_input' do
-    it 'returns the default value' do
+    xit 'returns the default value' do
       target, current = subject.get_input
       expect([target, current]).to contain_exactly([3, 0], [1, 1])
     end
 
-    xit '*collect user input*' do
+    it 'switches b/w select/move and returns a move' do
       # get row, column input 'e4'
       # convert to internal cordinates
       # use to select <- this class isnt supposed to be responsible for this
       # show moves in similiar output format e5, f4, d3
       # allow another input to select another piece, select a move
+      #
+      input_select = 'select'
+      input_move = 'move'
+      input_destination = 'e4'
+      expected = [3, 4]
+
+      subject.get_input(input_select)
+      expect(subject.get_current_mode).to eq(input_select)
+
+      subject.get_input(input_move)
+      expect(subject.get_current_mode).to eq(input_move)
+
+      expect(subject.get_input(input_destination)).to eq(expected)
+    end
+
+    it 'switches b/w select/move/select/move and returns a move' do
+      input_select = 'select'
+      input_move = 'move'
+      input_destination = 'a1'
+      expected = [0, 0]
+
+      subject.get_input(input_select)
+      expect(subject.get_current_mode).to eq(input_select)
+
+      subject.get_input(input_move)
+      expect(subject.get_current_mode).to eq(input_move)
+
+      subject.get_input(input_select)
+      expect(subject.get_current_mode).to eq(input_select)
+
+      subject.get_input(input_move)
+      expect(subject.get_current_mode).to eq(input_move)
+
+      expect(subject.get_input(input_destination)).to eq(expected)
     end
   end
 
