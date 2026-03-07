@@ -11,9 +11,42 @@ describe Input_Manager do
     xit '*collect user input*' do
       # get row, column input 'e4'
       # convert to internal cordinates
-      # use to select
+      # use to select <- this class isnt supposed to be responsible for this
       # show moves in similiar output format e5, f4, d3
       # allow another input to select another piece, select a move
+    end
+  end
+
+  describe '#is_user_actions?' do
+    it 'select is an action' do
+      input = 'select'
+
+      expect(subject.is_user_actions?(input)).to be true
+    end
+
+    it 'returns false for unsupported action' do
+      input = 'de-select'
+      expect(subject.is_user_actions?(input)).to be false
+    end
+
+    it 'quit is an action' do
+      input = 'quit'
+
+      expect(subject.is_user_actions?(input)).to be true
+    end
+
+    it 'move is an action' do
+      input = 'move'
+
+      expect(subject.is_user_actions?(input)).to be true
+    end
+
+    it 'save/load is an action' do
+      input1 = 'save'
+      input2 = 'load'
+
+      expect(subject.is_user_actions?(input1)).to be true
+      expect(subject.is_user_actions?(input2)).to be true
     end
   end
 

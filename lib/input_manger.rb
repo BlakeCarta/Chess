@@ -24,4 +24,17 @@ module Input_Manager
 
     [column, row].join('')
   end
+
+  def self.is_user_actions?(input_text)
+    supported_actions = %w[select quit move save load]
+    clean_text = user_action(input_text)
+
+    return true if supported_actions.include?(clean_text)
+
+    false
+  end
+
+  def self.user_action(input_text)
+    input_text.chomp.downcase
+  end
 end
