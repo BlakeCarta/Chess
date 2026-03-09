@@ -17,9 +17,9 @@ describe Input_Manager do
   end
 
   describe '#get_input' do
-    xit 'returns the default value' do
-      target, current = subject.get_input
-      expect([target, current]).to contain_exactly([3, 0], [1, 1])
+    it 'returns a cordinates for posistion input' do
+      input = 'a1'
+      expect(subject.get_input(input)).to contain_exactly(0, 0)
     end
 
     it 'switches b/w select/move and returns a move' do
