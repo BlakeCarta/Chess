@@ -4,97 +4,41 @@ require_relative '../lib/input_manger'
 describe Input_Manager do
   subject { Input_Manager }
 
-  describe '#generic_turn' do
-    it 'players turn is handled correctly' do
-      player_turn = 'player'
+  # describe '#generic_turn' do
+  #  it 'players turn is handled correctly' do
+  #    player_turn = 'player'
+  #
+  #    output_text = "Please input your action\nPlease input your desired target piece\n"
+  #    allow($stdin).to receive(:gets).and_return('select', 'e4', 'move', 'e4', 'e5')
+  #    expect do
+  #      subject.generic_turn
+  #    end.to output(output_text).to_stdout
+  #  end
+  #
+  #  it 'handles a select, move, quit, select, move, quit, move command chain' do
+  #    output_text = "Please input your action\nPlease input your desired target piece\nPlease input your action\nPlease input your desired target piece\nPlease input your desired target piece\nreplace with real moves\n"
+  #    allow($stdin).to receive(:gets).and_return('select', 'move', 'quit', 'select', 'move', 'quit', 'move')
+  #    expect do
+  #      subject.generic_turn
+  #    end.to output(output_text).to_stdout
+  #  end
+  # end
 
-      output_text = "Please input your action\nPlease input your desired target piece\ne5\n"
-      allow($stdin).to receive(:gets).and_return('select', 'e4', 'move', 'e4', 'e5')
-      expect do
-        subject.generic_turn
-      end.to output(output_text).to_stdout
-    end
-  end
-
-  describe '#get_input' do
-    it 'returns a cordinates for posistion input' do
-      input = 'a1'
-      expect(subject.get_input(input)).to contain_exactly(0, 0)
-    end
-
-    it 'switches b/w select/move and returns a move' do
-      # get row, column input 'e4'
-      # convert to internal cordinates
-      # use to select <- this class isnt supposed to be responsible for this
-      # show moves in similiar output format e5, f4, d3
-      # allow another input to select another piece, select a move
-      #
-      input_select = 'select'
-      input_move = 'move'
-      input_destination = 'e4'
-      expected = [3, 4]
-
-      subject.get_input(input_select)
-      expect(subject.get_current_mode).to eq(input_select)
-
-      subject.get_input(input_move)
-      expect(subject.get_current_mode).to eq(input_move)
-
-      expect(subject.get_input(input_destination)).to eq(expected)
+  describe '#valid_input?' do
+    it 'returns true for move e5 e6' do
+      expect(subject.valid_input?('move e5 e6')).to be true
     end
 
-    it 'switches b/w select/move/select/move and returns a move' do
-      input_select = 'select'
-      input_move = 'move'
-      input_destination = 'a1'
-      expected = [0, 0]
-
-      subject.get_input(input_select)
-      expect(subject.get_current_mode).to eq(input_select)
-
-      subject.get_input(input_move)
-      expect(subject.get_current_mode).to eq(input_move)
-
-      subject.get_input(input_select)
-      expect(subject.get_current_mode).to eq(input_select)
-
-      subject.get_input(input_move)
-      expect(subject.get_current_mode).to eq(input_move)
-
-      expect(subject.get_input(input_destination)).to eq(expected)
-    end
-  end
-
-  describe '#is_user_actions?' do
-    it 'select is an action' do
-      input = 'select'
-
-      expect(subject.is_user_actions?(input)).to be true
+    it 'returns false for move z8 e6' do
+      expect(subject.valid_input?('move z8 e6')).to be false
     end
 
-    it 'returns false for unsupported action' do
-      input = 'de-select'
-      expect(subject.is_user_actions?(input)).to be false
+    it 'returns false for no input' do
+      expect(subject.valid_input?('')).to be false
     end
 
-    it 'quit is an action' do
-      input = 'quit'
-
-      expect(subject.is_user_actions?(input)).to be true
-    end
-
-    it 'move is an action' do
-      input = 'move'
-
-      expect(subject.is_user_actions?(input)).to be true
-    end
-
-    it 'save/load is an action' do
-      input1 = 'save'
-      input2 = 'load'
-
-      expect(subject.is_user_actions?(input1)).to be true
-      expect(subject.is_user_actions?(input2)).to be true
+    it 'returns false for gibberish' do
+      expect(subject.valid_input?('qwoepriu')).to be false
     end
   end
 

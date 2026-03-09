@@ -1,47 +1,64 @@
 module Input_Manager
-  def self.get_input(input_text)
-    # target = [3, 0]
-    # current = [1, 1]
-    # [target, current]
-    return update_action(input_text) if is_user_actions?(input_text)
+  # def self.get_input(input_text)
+  #  # target = [3, 0]
+  #  # current = [1, 1]
+  #  # [target, current]
+  #  return update_action(input_text) if is_user_actions?(input_text)
+  #
+  #  convert_posistion_to_row_col(input_text)
+  # end
 
-    convert_posistion_to_row_col(input_text)
-  end
+  def play_turn
+    @current_command = nil
+    command = nil
 
-  def self.generic_turn
-    reset_mode
-    user_input = nil
-    while user_input.nil?
-      puts 'Please input your action'
+    while @current_command != 'quit' || command == 'quit'
 
-      user_input = get_input($stdin.gets.chomp)
-      user_input = user_mode_actions(user_input) unless @current_mode.nil?
-      break if @current_mode == 'move' && user_input.is_a?(Array)
-    end
-    user_input
-  end
+      puts 'Please input your desired action: '
+      puts 'example move e5 e6, or select e5 to see moves, or quit/save/load'
 
-  def self.user_mode_actions(user_input)
-    if @current_mode == 'select'
-      until user_input.is_a?(Array) || user_input == 'quit'
-        puts 'Please input your desired target piece'
-        user_input = get_input($stdin.gets.chomp)
-        get_moves_from_board(user_input)
+      command = $stdin.gets.chomp
+      until valid_input?(command)
+        puts 'please try another input'
+        command = $stdin.gets.chomp
+        break if command == 'quit'
       end
-    elsif @current_mode == 'move'
-      until user_input.is_a?(Array) || user_input == 'quit'
-        puts 'Please input your desired target piece'
-        user_input = get_input($stdin.gets.chomp)
-        get_moves_from_board(user_input)
-      end
+      act_on_command(command) unless command == 'quit'
     end
-
-    user_input
+    puts 'Turn over!'
   end
 
-  def self.get_moves_from_board(posistion)
-    # placeholder
-    puts 'e5'
+  def act_on_command(command)
+    command_arr = command.split(' ')
+
+    case command_arr.first
+    when 'move'
+      # posistion to move, destination
+      move_command(command_arr[1], command_arr[2])
+    when 'select'
+      # posistion to select
+      select_command(command_arr[1])
+    when 'save'
+      save_command
+    when 'load'
+      load_command
+    when 'quit'
+      quit_command
+    end
+  end
+
+  def self.valid_input?(input)
+    split_text = input.split(' ')
+    game_commands = %w[save quit load]
+    if split_text[0] == 'move' && !convert_posistion_to_row_col(split_text[1]).nil? && !convert_posistion_to_row_col(split_text[2]).nil?
+      true
+    elsif split_text[0] == 'select' && !convert_posistion_to_row_col(split_text[1]).nil?
+      true
+    elsif game_commands.include?(split_text[0])
+      true
+    else
+      false
+    end
   end
 
   def self.reset_mode
@@ -72,23 +89,30 @@ module Input_Manager
     [column, row].join('')
   end
 
-  def self.is_user_actions?(input_text)
-    supported_actions = %w[select quit move save load]
-    clean_text = user_action(input_text)
-
-    return true if supported_actions.include?(clean_text)
-
-    false
-  end
-
-  def self.user_action(input_text)
-    input_text.chomp.downcase
-  end
-
   private
 
   def self.update_action(input_text)
     # placeholder, meant to update state, i.e. move mode, select mode
     @current_mode = user_action(input_text)
+  end
+
+  def self.move_command(posistion_to_move, destination)
+    # send move to board for validation
+  end
+
+  def self.select_command(posistion)
+    # send posistion to board, and print out moves
+  end
+
+  def self.save_command
+    # save not implemented yet
+  end
+
+  def self.load_command
+    # not implemented yet
+  end
+
+  def self.quit_command
+    @current_mode = 'quit'
   end
 end
