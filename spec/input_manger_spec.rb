@@ -1,6 +1,20 @@
+# frozen_string_literal: true
+
 require_relative '../lib/input_manger'
 describe Input_Manager do
   subject { Input_Manager }
+
+  describe '#generic_turn' do
+    it 'players turn is handled correctly' do
+      player_turn = 'player'
+
+      output_text = "Please input your action\nPlease input your desired target piece\ne5\n"
+      allow($stdin).to receive(:gets).and_return('select', 'e4', 'move', 'e4', 'e5')
+      expect do
+        subject.generic_turn
+      end.to output(output_text).to_stdout
+    end
+  end
 
   describe '#get_input' do
     xit 'returns the default value' do

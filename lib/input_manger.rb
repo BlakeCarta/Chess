@@ -8,6 +8,46 @@ module Input_Manager
     convert_posistion_to_row_col(input_text)
   end
 
+  def self.generic_turn
+    reset_mode
+    user_input = nil
+    while user_input.nil?
+      puts 'Please input your action'
+
+      user_input = get_input($stdin.gets.chomp)
+      user_input = user_mode_actions(user_input) unless @current_mode.nil?
+      break if @current_mode == 'move' && user_input.is_a?(Array)
+    end
+    user_input
+  end
+
+  def self.user_mode_actions(user_input)
+    if @current_mode == 'select'
+      until user_input.is_a?(Array) || user_input == 'quit'
+        puts 'Please input your desired target piece'
+        user_input = get_input($stdin.gets.chomp)
+        get_moves_from_board(user_input)
+      end
+    elsif @current_mode == 'move'
+      until user_input.is_a?(Array) || user_input == 'quit'
+        puts 'Please input your desired target piece'
+        user_input = get_input($stdin.gets.chomp)
+        get_moves_from_board(user_input)
+      end
+    end
+
+    user_input
+  end
+
+  def self.get_moves_from_board(posistion)
+    # placeholder
+    puts 'e5'
+  end
+
+  def self.reset_mode
+    @current_mode = nil
+  end
+
   def self.get_current_mode
     @current_mode
   end
