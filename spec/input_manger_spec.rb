@@ -40,6 +40,10 @@ describe Input_Manager do
     it 'returns false for gibberish' do
       expect(subject.valid_input?('qwoepriu')).to be false
     end
+
+    it 'handles nil input' do
+      expect(subject.valid_input?(nil)).to be false
+    end
   end
 
   describe '#convert_row_col_to_posistion' do

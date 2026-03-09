@@ -48,7 +48,9 @@ module Input_Manager
   end
 
   def self.valid_input?(input)
-    split_text = input.split(' ')
+    split_text = input&.split(' ')
+    return false if split_text.nil?
+
     game_commands = %w[save quit load]
     if split_text[0] == 'move' && !convert_posistion_to_row_col(split_text[1]).nil? && !convert_posistion_to_row_col(split_text[2]).nil?
       true
