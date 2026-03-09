@@ -46,6 +46,33 @@ describe Input_Manager do
     end
   end
 
+  describe '#move_command' do
+    xit 'gets moves from the board' do
+      # WIP
+    end
+  end
+
+  describe '#select_commmand' do
+    xit 'gets the available moves from the board' do
+      # WIP
+    end
+  end
+
+  describe '#save_command' do
+    xit 'sends the save command to the game' do
+    end
+  end
+
+  describe '#load_command' do
+    xit 'sends the load command to the game' do
+    end
+  end
+
+  describe '#quit_command' do
+    xit 'sends the quit command to the game' do
+    end
+  end
+
   describe '#convert_row_col_to_posistion' do
     it 'returns e4 for 3,4' do
       input = [3, 4]
