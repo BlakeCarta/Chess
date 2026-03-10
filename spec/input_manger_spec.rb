@@ -4,26 +4,6 @@ require_relative '../lib/input_manger'
 describe Input_Manager do
   subject { Input_Manager }
 
-  # describe '#generic_turn' do
-  #  it 'players turn is handled correctly' do
-  #    player_turn = 'player'
-  #
-  #    output_text = "Please input your action\nPlease input your desired target piece\n"
-  #    allow($stdin).to receive(:gets).and_return('select', 'e4', 'move', 'e4', 'e5')
-  #    expect do
-  #      subject.generic_turn
-  #    end.to output(output_text).to_stdout
-  #  end
-  #
-  #  it 'handles a select, move, quit, select, move, quit, move command chain' do
-  #    output_text = "Please input your action\nPlease input your desired target piece\nPlease input your action\nPlease input your desired target piece\nPlease input your desired target piece\nreplace with real moves\n"
-  #    allow($stdin).to receive(:gets).and_return('select', 'move', 'quit', 'select', 'move', 'quit', 'move')
-  #    expect do
-  #      subject.generic_turn
-  #    end.to output(output_text).to_stdout
-  #  end
-  # end
-
   describe '#valid_input?' do
     it 'returns true for move e5 e6' do
       expect(subject.valid_input?('move e5 e6')).to be true
@@ -47,8 +27,27 @@ describe Input_Manager do
   end
 
   describe '#move_command' do
-    xit 'gets moves from the board' do
+    xit 'moves the piece on the board' do
       # WIP
+    end
+
+    xit 'doesnt send invalid moves and re-prompts for a valid move' do
+      # WIP
+    end
+
+    xit 'cant move enemy pieces' do
+      # WIP
+      # The board should handle that validation
+      # the input manager doesnt need that responsibility
+    end
+
+    xit 'cant move empty spaces' do
+    end
+
+    xit 'invalid destination is handled cleanly' do
+    end
+
+    xit 'cant move into check/checkmate' do
     end
   end
 
@@ -56,15 +55,39 @@ describe Input_Manager do
     xit 'gets the available moves from the board' do
       # WIP
     end
+
+    xit 'can see enemy moves' do
+      # white can see black and vice versa
+    end
+
+    xit 'empty spaces are not valid' do
+    end
+
+    xit 'invalid destination is handled cleanly' do
+    end
+
+    xit 'doesnt show moves into check/checkmate' do
+    end
   end
 
   describe '#save_command' do
-    xit 'sends the save command to the game' do
+    xit 'sends the save command to the game manager' do
+    end
+
+    xit 'prints the saved file name when done' do
     end
   end
 
   describe '#load_command' do
     xit 'sends the load command to the game' do
+    end
+
+    xit 'cant load invalid file names' do
+    end
+  end
+
+  describe '#files_command' do
+    xit 'prints all loadable file games into the terminal' do
     end
   end
 
