@@ -26,75 +26,75 @@ describe Input_Manager do
     end
   end
 
-  describe '#move_command' do
-    xit 'moves the piece on the board' do
-      # WIP
-    end
-
-    xit 'doesnt send invalid moves and re-prompts for a valid move' do
-      # WIP
-    end
-
-    xit 'cant move enemy pieces' do
-      # WIP
-      # The board should handle that validation
-      # the input manager doesnt need that responsibility
-    end
-
-    xit 'cant move empty spaces' do
-    end
-
-    xit 'invalid destination is handled cleanly' do
-    end
-
-    xit 'cant move into check/checkmate' do
-    end
-  end
-
-  describe '#select_commmand' do
-    xit 'gets the available moves from the board' do
-      # WIP
-    end
-
-    xit 'can see enemy moves' do
-      # white can see black and vice versa
-    end
-
-    xit 'empty spaces are not valid' do
-    end
-
-    xit 'invalid destination is handled cleanly' do
-    end
-
-    xit 'doesnt show moves into check/checkmate' do
-    end
-  end
-
-  describe '#save_command' do
-    xit 'sends the save command to the game manager' do
-    end
-
-    xit 'prints the saved file name when done' do
-    end
-  end
-
-  describe '#load_command' do
-    xit 'sends the load command to the game' do
-    end
-
-    xit 'cant load invalid file names' do
-    end
-  end
-
-  describe '#files_command' do
-    xit 'prints all loadable file games into the terminal' do
-    end
-  end
-
-  describe '#quit_command' do
-    xit 'sends the quit command to the game' do
-    end
-  end
+  # describe '#move_command' do
+  #   xit 'moves the piece on the board' do
+  #     # WIP
+  #   end
+  #
+  #   xit 'doesnt send invalid moves and re-prompts for a valid move' do
+  #     # WIP
+  #   end
+  #
+  #   xit 'cant move enemy pieces' do
+  #     # WIP
+  #     # The board should handle that validation
+  #     # the input manager doesnt need that responsibility
+  #   end
+  #
+  #   xit 'cant move empty spaces' do
+  #   end
+  #
+  #   xit 'invalid destination is handled cleanly' do
+  #   end
+  #
+  #   xit 'cant move into check/checkmate' do
+  #   end
+  # end
+  #
+  # describe '#select_commmand' do
+  #   xit 'gets the available moves from the board' do
+  #     # WIP
+  #   end
+  #
+  #   xit 'can see enemy moves' do
+  #     # white can see black and vice versa
+  #   end
+  #
+  #   xit 'empty spaces are not valid' do
+  #   end
+  #
+  #   xit 'invalid destination is handled cleanly' do
+  #   end
+  #
+  #   xit 'doesnt show moves into check/checkmate' do
+  #   end
+  # end
+  #
+  # describe '#save_command' do
+  #   xit 'sends the save command to the game manager' do
+  #   end
+  #
+  #   xit 'prints the saved file name when done' do
+  #   end
+  # end
+  #
+  # describe '#load_command' do
+  #   xit 'sends the load command to the game' do
+  #   end
+  #
+  #   xit 'cant load invalid file names' do
+  #   end
+  # end
+  #
+  # describe '#files_command' do
+  #   xit 'prints all loadable file games into the terminal' do
+  #   end
+  # end
+  #
+  # describe '#quit_command' do
+  #   xit 'sends the quit command to the game' do
+  #   end
+  # end
 
   describe '#convert_row_col_to_posistion' do
     it 'returns e4 for 3,4' do

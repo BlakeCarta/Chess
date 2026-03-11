@@ -23,33 +23,42 @@ module Input_Manager
         command = $stdin.gets.chomp
         break if command == 'quit'
       end
-      act_on_command(command) unless command == 'quit'
+      # act_on_command(command) unless command == 'quit'
     end
-    puts 'Turn over!'
+    # puts 'Turn over!'
     return nil unless command == 'move'
 
-    text = command.split(' ')
-    [text[0], convert_posistion_to_row_col(text[1]), convert_posistion_to_row_col(text[2])]
+    convert_input(command.split(' '))
   end
 
-  def act_on_command(command)
-    command_arr = command.split(' ')
-
-    case command_arr.first
-    when 'move'
-      # posistion to move, destination
-      move_command(command_arr[1], command_arr[2])
-    when 'select'
-      # posistion to select
-      select_command(command_arr[1])
-    when 'save'
-      save_command
-    when 'load'
-      load_command
-    when 'quit'
-      quit_command
+  def convert_input(split_text)
+    if split_text[0] == 'move' && !convert_posistion_to_row_col(split_text[1]).nil? && !convert_posistion_to_row_col(split_text[2]).nil?
+      [split_text[0], convert_posistion_to_row_col(split_text[1]), convert_posistion_to_row_col(split_text[2])]
+    elsif split_text[0] == 'select' && !convert_posistion_to_row_col(split_text[1]).nil?
+      [split_text[0], convert_posistion_to_row_col(split_text[1])]
+    else
+      split_text
     end
   end
+
+  # def act_on_command(command)
+  #  command_arr = command.split(' ')
+  #
+  #  case command_arr.first
+  #  when 'move'
+  #    # posistion to move, destination
+  #    move_command(command_arr[1], command_arr[2])
+  #  when 'select'
+  #    # posistion to select
+  #    select_command(command_arr[1])
+  #  when 'save'
+  #    save_command
+  #  when 'load'
+  #    load_command
+  #  when 'quit'
+  #    quit_command
+  #  end
+  # end
 
   def self.valid_input?(input)
     split_text = input&.split(' ')
