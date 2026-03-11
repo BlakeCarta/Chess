@@ -26,6 +26,10 @@ module Input_Manager
       act_on_command(command) unless command == 'quit'
     end
     puts 'Turn over!'
+    return nil unless command == 'move'
+
+    text = command.split(' ')
+    [text[0], convert_posistion_to_row_col(text[1]), convert_posistion_to_row_col(text[2])]
   end
 
   def act_on_command(command)

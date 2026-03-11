@@ -71,7 +71,6 @@ class Board_Manager
   end
 
   def setup_board
-    # doesnt know what a piece is, how do I want to handle this?
     all_piece_locations = { black_pawns: { locations: [[6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5], [6, 6], [6, 7]], color: 'black', type: 'pawn' },
                             white_pawns: { locations: [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7]],
                                            color: 'white', type: 'pawn' },
