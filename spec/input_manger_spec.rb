@@ -32,7 +32,9 @@ describe Input_Manager do
       expect(subject.play_turn).to eq(nil)
     end
 
-    xit 'returns ["move","e5", "e6"] for move e5 e6' do
+    it 'returns ["move","e5", "e6"] for move e5 e6' do
+      allow($stdin).to receive(:gets).and_return('move e5 e6')
+      expect(subject.play_turn).to contain_exactly('move', [4, 4], [5, 4])
     end
 
     xit 'returns ["select","a1"] for select a1' do

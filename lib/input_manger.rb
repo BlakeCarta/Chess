@@ -2,24 +2,25 @@ module Input_Manager
   def self.play_turn
     command = nil
 
-    while command != 'quit'
+    puts 'Please input your desired action: '
+    puts 'example move e5 e6, or select e5 to see moves, or quit/save/load'
 
-      puts 'Please input your desired action: '
-      puts 'example move e5 e6, or select e5 to see moves, or quit/save/load'
-
+    command = $stdin.gets.chomp
+    until valid_input?(command)
+      puts 'please try another input'
       command = $stdin.gets.chomp
-      until valid_input?(command)
-        puts 'please try another input'
-        command = $stdin.gets.chomp
-        break if command == 'quit'
-      end
+      break if command == 'quit'
     end
-    return nil unless command == 'move'
 
-    convert_input(command.split(' '))
+    split_input = convert_input(command.split(' '))
+    return split_input if split_input[0] == 'move'
+
+    nil
+
+    # return nil unless command == 'move'
   end
 
-  def convert_input(split_text)
+  def self.convert_input(split_text)
     if split_text[0] == 'move' && !convert_posistion_to_row_col(split_text[1]).nil? && !convert_posistion_to_row_col(split_text[2]).nil?
       [split_text[0], convert_posistion_to_row_col(split_text[1]), convert_posistion_to_row_col(split_text[2])]
     elsif split_text[0] == 'select' && !convert_posistion_to_row_col(split_text[1]).nil?
