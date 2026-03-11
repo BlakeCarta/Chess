@@ -58,7 +58,20 @@ class GameManager
     print_end_of_player_turn_text
   end
 
+  def ai_turn
+    loop do
+      puts ai_player_turn_message
+      ai_action = @ai_player.make_move(@board_manager)
+      # break if valid move otherwise, try again
+      break if determine_player_action(ai_action)
+    end
+  end
+
   private
+
+  def ai_player_turn_message
+    'The computer will now make a move!'
+  end
 
   def player_turn_message
     'Player Turn!'
