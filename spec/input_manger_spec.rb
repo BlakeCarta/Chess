@@ -26,6 +26,23 @@ describe Input_Manager do
     end
   end
 
+  describe '#play_turn' do
+    it 'handles invalid input until valid' do
+      allow($stdin).to receive(:gets).and_return("gibeerish\n", "\n", "quit\n")
+      expect(subject.play_turn).to eq(nil)
+    end
+
+    xit 'returns ["move","e5", "e6"] for move e5 e6' do
+    end
+
+    xit 'returns ["select","a1"] for select a1' do
+    end
+
+    xit 'returns basic commands' do
+      # save, load, quit
+    end
+  end
+
   # describe '#move_command' do
   #   xit 'moves the piece on the board' do
   #     # WIP
