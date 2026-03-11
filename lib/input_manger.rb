@@ -1,7 +1,5 @@
 module Input_Manager
   def self.play_turn
-    command = nil
-
     puts 'Please input your desired action: '
     puts 'example move e5 e6, or select e5 to see moves, or quit/save/load'
 
