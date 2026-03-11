@@ -7,13 +7,14 @@ module Input_Manager
 
     command = $stdin.gets.chomp
     until valid_input?(command)
+      return nil if command == 'quit'
+
       puts 'please try another input'
       command = $stdin.gets.chomp
-      break if command == 'quit'
     end
 
     split_input = convert_input(command.split(' '))
-    return split_input if split_input[0] == 'move'
+    return split_input unless split_input.nil? || split_input[0] == 'quit'
 
     nil
 

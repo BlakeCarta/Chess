@@ -32,16 +32,26 @@ describe Input_Manager do
       expect(subject.play_turn).to eq(nil)
     end
 
-    it 'returns ["move","e5", "e6"] for move e5 e6' do
+    it 'returns ["move", [4, 4], [5, 4]] for move e5 e6' do
       allow($stdin).to receive(:gets).and_return('move e5 e6')
       expect(subject.play_turn).to contain_exactly('move', [4, 4], [5, 4])
     end
 
-    xit 'returns ["select","a1"] for select a1' do
+    it 'returns ["select", [0,0]] for select a1' do
+      allow($stdin).to receive(:gets).and_return('select a1')
+      expected = ['select', [0, 0]]
+      expect(subject.play_turn).to match_array(expected)
     end
 
-    xit 'returns basic commands' do
+    it 'returns basic commands' do
       # save, load, quit
+      allow($stdin).to receive(:gets).and_return('save', 'load', 'quit')
+      # save input
+      expect(subject.play_turn).to match_array('save')
+      # try again with load input
+      expect(subject.play_turn).to match_array('load')
+      # try again with quit input
+      expect(subject.play_turn).to be_nil
     end
   end
 
