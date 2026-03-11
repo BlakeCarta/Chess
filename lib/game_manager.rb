@@ -88,7 +88,7 @@ class GameManager
   end
 
   def player_used_select(player_input)
-    puts @board_manager.get_location(player_input[1]).get_moves if player_input[0] == 'select'
+    puts @board_manager.get_location(player_input[1]).get_moves(@board_manager) if player_input[0] == 'select'
   end
 
   def player_used_move(player_input)

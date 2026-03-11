@@ -67,7 +67,7 @@ describe GameManager do
 
     describe '#player_turn' do
       before do
-        @input_double = instance_double(Input_Manager)
+        @input_double = class_double(Input_Manager)
         @board_double = instance_double(Board_Manager)
         @piece_double = instance_double(Piece)
 
@@ -81,6 +81,17 @@ describe GameManager do
         allow(@input_double).to receive(:play_turn).and_return(['move', [0, 0], [0, 1]])
         allow(@board_double).to receive(:get_location).with([0, 0]).and_return(@piece_double)
         allow(@board_double).to receive(:move_piece).with([0, 0], [0, 1]).and_return(nil)
+        allow(@piece_double).to receive(:get_moves).and_return([[0, 1]])
+
+        subject.player_turn
+      end
+
+      it 'Does not calls the move function for a valid selct input' do
+        expect(@board_double).not_to receive(:move_piece)
+
+        allow(@input_double).to receive(:play_turn).and_return(['select', [0, 0]])
+        allow(@board_double).to receive(:get_location).with([0, 0]).and_return(@piece_double)
+
         allow(@piece_double).to receive(:get_moves).and_return([[0, 1]])
 
         subject.player_turn
