@@ -96,6 +96,25 @@ describe GameManager do
 
         subject.player_turn
       end
+
+      it 'returns quit for quit input' do
+        allow(@input_double).to receive(:play_turn).and_return('quit')
+
+        expect(subject.player_turn).to eq('quit')
+      end
+
+      it 'handles save input' do
+        expect(subject).to receive(:player_used_save)
+        allow(@input_double).to receive(:play_turn).and_return('save')
+        subject.player_turn
+      end
+
+      it 'handles load input' do
+        expect(subject).to receive(:player_used_load)
+        allow(@input_double).to receive(:play_turn).and_return('load')
+
+        subject.player_turn
+      end
     end
   end
 end

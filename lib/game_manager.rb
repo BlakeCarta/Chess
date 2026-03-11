@@ -34,6 +34,8 @@ class GameManager
   end
 
   def valid_player_move?(player_input)
+    return false if player_input.nil? || player_input == 'save' || player_input == 'load'
+
     move_list = @board_manager.get_location(player_input[1]).get_moves(@board_manager)
     player_input[0] == 'move' && move_list.include?(player_input[2])
   end
@@ -71,7 +73,13 @@ class GameManager
       player_used_move(player_input)
       return true
     else
-      case player_input[0]
+      command = if player_input.is_a?(Array)
+                  player_input[0]
+                else
+                  player_input
+                end
+
+      case command
       when 'select'
         # posistion to select
         player_used_select(player_input)
@@ -80,6 +88,7 @@ class GameManager
         player_used_save(player_input)
         return true
       when 'load'
+        # loading files should be multiple inputs
         player_used_load(player_input)
         return true
       end
