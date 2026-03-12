@@ -34,6 +34,7 @@ class AiPlayer < Player
   private
 
   def move_piece(piece_to_move, destination)
+    # placeholder function to return the move to the game
     [piece_to_move, destination]
   end
 
@@ -43,13 +44,30 @@ class AiPlayer < Player
 
     # not sure if this logic pans out, like it might need to move to block
     # this assumes it can only move to destroy
-    move_piece(piece_to_move[:piece_location], threat_info[:threat_origin])
+    move_piece(piece_to_move[:piece_location], piece_to_move[:destination])
+  end
+
+  def can_intercept_threat?(moves, threat_info)
+    moves.any? { |move| threat_info[:threat_spaces].include?(move) }
+  end
+
+  def get_intercept_destination(moves, threat_info)
+    moves.select { |move| threat_info[:threat_spaces].include?(move) }
   end
 
   def find_piece_to_stop_check(threat_info)
     get_all_pieces.map do |piece_location|
       moves = @board_manager_ref.get_location(piece_location).get_moves(@board_manager_ref)
-      return { piece_location: piece_location, threat_info: threat_info } if moves.include?(threat_info[:threat_origin])
+      # check if the threat itself can be eliminated, if so make that move
+      if moves.include?(threat_info[:threat_origin])
+        return { piece_location: piece_location,
+                 destination: threat_info[:threat_origin] }
+      elsif can_intercept_threat?
+        destination = get_intercept_destination
+
+        return { piece_location: piece_location,
+                 destination: destination }
+      end
     end
   end
 
