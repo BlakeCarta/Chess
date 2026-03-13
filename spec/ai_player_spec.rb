@@ -50,5 +50,34 @@ describe AiPlayer do
 
       expect(subject.in_check?).to be false
     end
+
+    it 'black king is in check' do
+      @board_manager.set_location([7, 7], @black_king)
+      @board_manager.set_location([5, 5], @white_queen)
+      @board_manager.set_location([6, 7], @white_pawn)
+      @board_manager.set_location([7, 6], @white_pawn)
+      subject.board_manager_ref = @board_manager
+      subject.color = 'black'
+
+      # exact output should not matter in this case
+      allow(@black_king).to receive(:get_moves).and_return([[6, 7]])
+      allow(@white_queen).to receive(:get_moves).and_return([[7, 7], [6, 7], [7, 6]])
+      allow(@white_pawn).to receive(:get_moves).and_return([[7, 7]])
+
+      expect(subject.in_check?).to be true
+    end
+
+    it 'black king is not in check' do
+      @board_manager.set_location([0, 0], @white_king)
+      @board_manager.set_location([7, 7], @black_king)
+      subject.board_manager_ref = @board_manager
+      subject.color = 'black'
+
+      # exact output should not matter in this case
+      allow(@white_king).to receive(:get_moves).and_return([[1, 1]])
+      allow(@black_king).to receive(:get_moves).and_return([[6, 6]])
+
+      expect(subject.in_check?).to be false
+    end
   end
 end
