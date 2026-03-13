@@ -1,6 +1,13 @@
 require_relative 'player'
 class AiPlayer < Player
-  def make_move(board_manager_ref)
+  def initialize(board_manager = nil)
+    @board_manager_ref = board_manager
+    @name = 'Computer'
+  end
+
+  attr_accessor :board_manager_ref
+
+  def make_move
     # Alternate b/w the furtherest forward piece and a random one
     # 1st turn starts with a pawn
     # 2nd turn random
@@ -28,7 +35,7 @@ class AiPlayer < Player
 
     update_threats
 
-    @threatend_squares.include?(king_location)
+    @threatend_squares.include?([king_location])
   end
 
   private
@@ -98,7 +105,7 @@ class AiPlayer < Player
         next if square.color != color
 
         # potential_pieces << [index, col_index]
-        return [index, col_index] if name == 'king'
+        return [index, col_index] if square.name == 'king'
       end
     end
   end
