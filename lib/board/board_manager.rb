@@ -93,6 +93,20 @@ class Board_Manager
     fix_board
   end
 
+  def find_piece(player_color, piece_name)
+    return player_color if player_color.nil?
+    return piece_name if piece_name.nil?
+
+    get_board.each_with_index do |row, index|
+      row.each_with_index do |square, col_index|
+        next if square == 'x'
+        next if square.color != player_color
+
+        return [index, col_index] if square.name == piece_name
+      end
+    end
+  end
+
   private
 
   def fix_board
