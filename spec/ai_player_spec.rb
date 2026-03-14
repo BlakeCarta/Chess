@@ -82,22 +82,44 @@ describe AiPlayer do
   end
 
   describe '#get_out_of_check' do
-    it 'white king can get out of check' do
-      @board_manager.set_location([0, 0], @white_king)
-      @board_manager.set_location([2, 2], @black_queen)
+    # having context issues with references to other boards leaking in
+    context 'white king at 3,3' do
+      it 'white king can get out of check' do
+        @board_manager.set_location([3, 3], @white_king)
+        @board_manager.set_location([2, 2], @black_queen)
 
-      @board_manager.set_location([0, 1], @black_pawn)
-      subject.board_manager_ref = @board_manager
-      subject.color = 'white'
+        subject.board_manager_ref = @board_manager
+        subject.color = 'white'
 
-      allow(@white_king).to receive(:get_moves).and_return([[1, 1], [1, 0]])
-      allow(@black_queen).to receive(:get_moves).and_return([[0, 0], [0, 1], [1, 1], [2, 0], [0, 2]])
-      allow(@black_pawn).to receive(:get_moves).and_return([[0, 0]])
-      allow(@board_manager).to receive(:get_threatend_squares).with('white').and_return([[0, 0], [0, 1], [1, 1], [2, 0],
-                                                                                         [0, 2]])
+        allow(@white_king).to receive(:get_moves).and_return([[2, 2], [4, 3]])
+        allow(@black_queen).to receive(:get_moves).and_return([[0, 0], [0, 1], [1, 1], [2, 0], [0, 2], [2, 2], [3, 3]])
+        # allow(@black_pawn).to receive(:get_moves).and_return([[0, 0]])
+        allow(@board_manager).to receive(:get_threatend_squares).with('white').and_return([[0, 0], [0, 1], [1, 1],
+                                                                                           [2, 0], [0, 2], [2, 2], [3, 3]])
 
-      expected = [[0, 0], [1, 0]]
-      expect(subject.get_out_of_check).to match_array(expected)
+        expected = [[3, 3], [2, 2]]
+        expect(subject.get_out_of_check).to match_array(expected)
+      end
+    end
+
+    context 'white king at 0,0' do
+      it 'white king can get out of check' do
+        @board_manager.set_location([0, 0], @white_king)
+        @board_manager.set_location([2, 2], @black_queen)
+
+        @board_manager.set_location([0, 1], @black_pawn)
+        subject.board_manager_ref = @board_manager
+        subject.color = 'white'
+
+        allow(@white_king).to receive(:get_moves).and_return([[1, 1], [1, 0]])
+        allow(@black_queen).to receive(:get_moves).and_return([[0, 0], [0, 1], [1, 1], [2, 0], [0, 2]])
+        allow(@black_pawn).to receive(:get_moves).and_return([[0, 0]])
+        allow(@board_manager).to receive(:get_threatend_squares).with('white').and_return([[0, 0], [0, 1], [1, 1], [2, 0],
+                                                                                           [0, 2]])
+
+        expected = [[0, 0], [1, 0]]
+        expect(subject.get_out_of_check).to match_array(expected)
+      end
     end
   end
 end

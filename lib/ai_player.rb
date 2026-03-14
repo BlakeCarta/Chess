@@ -23,6 +23,8 @@ class AiPlayer < Player
     # Well checkmate ends game, so only need to validate checks
     #
     if in_check?
+      # Should always be able to get out of check
+      # the game would be over if that wasnt the case
       get_out_of_check
     elsif random_turn?
       get_random_piece
@@ -100,8 +102,9 @@ class AiPlayer < Player
 
   def get_escape_destination(moves)
     threats = @board_manager_ref.get_threatend_squares(color)
+    king_location = find_king
     moves.select do |move|
-      !threats.include?(move)
+      !threats.include?(move) && move != king_location
     end.first
   end
 
@@ -128,15 +131,7 @@ class AiPlayer < Player
   end
 
   def find_king
-    @board_manager_ref.get_board.each_with_index do |row, index|
-      row.each_with_index do |square, col_index|
-        next if square == 'x'
-        next if square.color != color
-
-        # potential_pieces << [index, col_index]
-        return [index, col_index] if square.name == 'king'
-      end
-    end
+    @board_manager_ref.find_piece(color, 'king')
   end
 
   def get_all_pieces
