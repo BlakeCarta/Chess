@@ -4,24 +4,24 @@ require_relative '../lib/board/board_manager'
 describe AiPlayer do
   subject { AiPlayer.new }
 
+  before do
+    @board_manager = Board_Manager.new
+    @black_pawn = instance_double('Piece', name: 'pawn', color: 'black')
+    @black_rook = instance_double('Piece', name: 'rook', color: 'black')
+    @black_knight = instance_double('Piece', name: 'knight', color: 'black')
+    @black_bishop = instance_double('Piece', name: 'bishop', color: 'black')
+    @black_queen = instance_double('Piece', name: 'queen', color: 'black')
+    @black_king = instance_double('Piece', name: 'king', color: 'black')
+
+    @white_pawn = instance_double('Piece', name: 'pawn', color: 'white')
+    @white_rook = instance_double('Piece', name: 'rook', color: 'white')
+    @white_knight = instance_double('Piece', name: 'knight', color: 'white')
+    @white_bishop = instance_double('Piece', name: 'bishop', color: 'white')
+    @white_queen = instance_double('Piece', name: 'queen', color: 'white')
+    @white_king = instance_double('Piece', name: 'king', color: 'white')
+  end
+
   describe '#in_check?' do
-    before do
-      @board_manager = Board_Manager.new
-      @black_pawn = instance_double('Piece', name: 'pawn', color: 'black')
-      @black_rook = instance_double('Piece', name: 'rook', color: 'black')
-      @black_knight = instance_double('Piece', name: 'knight', color: 'black')
-      @black_bishop = instance_double('Piece', name: 'bishop', color: 'black')
-      @black_queen = instance_double('Piece', name: 'queen', color: 'black')
-      @black_king = instance_double('Piece', name: 'king', color: 'black')
-
-      @white_pawn = instance_double('Piece', name: 'pawn', color: 'white')
-      @white_rook = instance_double('Piece', name: 'rook', color: 'white')
-      @white_knight = instance_double('Piece', name: 'knight', color: 'white')
-      @white_bishop = instance_double('Piece', name: 'bishop', color: 'white')
-      @white_queen = instance_double('Piece', name: 'queen', color: 'white')
-      @white_king = instance_double('Piece', name: 'king', color: 'white')
-    end
-
     it 'white king is in check' do
       @board_manager.set_location([0, 0], @white_king)
       @board_manager.set_location([2, 2], @black_queen)
@@ -32,7 +32,7 @@ describe AiPlayer do
 
       # exact output should not matter in this case
       allow(@white_king).to receive(:get_moves).and_return([[1, 1]])
-      allow(@black_queen).to receive(:get_moves).and_return([[0, 0], [1, 0], [0, 1]])
+      allow(@black_queen).to receive(:get_moves).and_return([[0, 0], [2, 0], [0, 2]])
       allow(@black_pawn).to receive(:get_moves).and_return([[0, 0]])
 
       expect(subject.in_check?).to be true
@@ -61,7 +61,7 @@ describe AiPlayer do
 
       # exact output should not matter in this case
       allow(@black_king).to receive(:get_moves).and_return([[6, 7]])
-      allow(@white_queen).to receive(:get_moves).and_return([[7, 7], [6, 7], [7, 6]])
+      allow(@white_queen).to receive(:get_moves).and_return([[7, 7], [5, 7], [7, 5]])
       allow(@white_pawn).to receive(:get_moves).and_return([[7, 7]])
 
       expect(subject.in_check?).to be true
@@ -78,6 +78,26 @@ describe AiPlayer do
       allow(@black_king).to receive(:get_moves).and_return([[6, 6]])
 
       expect(subject.in_check?).to be false
+    end
+  end
+
+  describe '#get_out_of_check' do
+    it 'white king can get out of check' do
+      @board_manager.set_location([0, 0], @white_king)
+      @board_manager.set_location([2, 2], @black_queen)
+
+      @board_manager.set_location([0, 1], @black_pawn)
+      subject.board_manager_ref = @board_manager
+      subject.color = 'white'
+
+      allow(@white_king).to receive(:get_moves).and_return([[1, 1], [1, 0]])
+      allow(@black_queen).to receive(:get_moves).and_return([[0, 0], [0, 1], [1, 1], [2, 0], [0, 2]])
+      allow(@black_pawn).to receive(:get_moves).and_return([[0, 0]])
+      allow(@board_manager).to receive(:get_threatend_squares).with('white').and_return([[0, 0], [0, 1], [1, 1], [2, 0],
+                                                                                         [0, 2]])
+
+      expected = [[0, 0], [1, 0]]
+      expect(subject.get_out_of_check).to match_array(expected)
     end
   end
 end

@@ -3,6 +3,7 @@ class AiPlayer < Player
   def initialize(board_manager = nil)
     @board_manager_ref = board_manager
     @name = 'Computer'
+    @random_turn = false
   end
 
   attr_accessor :board_manager_ref
@@ -38,13 +39,6 @@ class AiPlayer < Player
     @threatend_squares.include?([king_location])
   end
 
-  private
-
-  def move_piece(piece_to_move, destination)
-    # placeholder function to return the move to the game
-    [piece_to_move, destination]
-  end
-
   def get_out_of_check
     threat_info = find_check_threat
     piece_to_move = find_piece_to_stop_check(threat_info)
@@ -52,6 +46,23 @@ class AiPlayer < Player
     # not sure if this logic pans out, like it might need to move to block
     # this assumes it can only move to destroy
     move_piece(piece_to_move[:piece_location], piece_to_move[:destination])
+  end
+
+  private
+
+  def random_turn?
+    if @random_turn == false
+      @random_turn = true
+      false
+    else
+      @random_turn = false
+      true
+    end
+  end
+
+  def move_piece(piece_to_move, destination)
+    # placeholder function to return the move to the game
+    [piece_to_move, destination]
   end
 
   def can_intercept_threat?(moves, threat_info)
@@ -69,8 +80,13 @@ class AiPlayer < Player
       if moves.include?(threat_info[:threat_origin])
         return { piece_location: piece_location,
                  destination: threat_info[:threat_origin] }
-      elsif can_intercept_threat?
+      elsif can_intercept_threat?(moves, threat_info)
         destination = get_intercept_destination
+
+        return { piece_location: piece_location,
+                 destination: destination }
+      elsif can_escape_threat?(moves)
+        destination = get_escape_destination(moves)
 
         return { piece_location: piece_location,
                  destination: destination }
@@ -78,12 +94,24 @@ class AiPlayer < Player
     end
   end
 
+  def can_escape_threat?(moves)
+    !get_escape_destination(moves).nil?
+  end
+
+  def get_escape_destination(moves)
+    threats = @board_manager_ref.get_threatend_squares(color)
+    moves.select do |move|
+      !threats.include?(move)
+    end.first
+  end
+
+  # cant handle multiple threating pieces
   def find_check_threat
     king_location = find_king
     @board_manager_ref.get_board.each_with_index do |row, index|
       row.each_with_index do |square, col_index|
         next if square.is_a?(String)
-        next if square.color != color
+        next if square.color == color
 
         threat_spaces = square.get_moves(@board_manager_ref)
         if threat_spaces.include?(king_location)
@@ -91,6 +119,7 @@ class AiPlayer < Player
         end
       end
     end
+    nil
   end
 
   def update_threats
