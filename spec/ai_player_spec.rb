@@ -133,7 +133,7 @@ describe AiPlayer do
       end
     end
 
-    context 'black king at 0,5' do
+    context 'white king at 0,5' do
       before { @board_manager = Board_Manager.new }
 
       it 'white king can get out of check' do
@@ -164,6 +164,38 @@ describe AiPlayer do
         allow(@board_manager).to receive(:get_threatend_squares).with('white').and_return([[0, 5], [1, 5], [2, 5]])
 
         expected = [[0, 5], [0, 4]]
+        expect(subject.get_out_of_check).to match_array(expected)
+      end
+    end
+
+    context 'white king at 0,5' do
+      before { @board_manager = Board_Manager.new }
+
+      it 'black king can get out of check' do
+        subject.board_manager_ref = @board_manager
+
+        @board_manager.set_location([7, 5], @black_king)
+        @board_manager.set_location([7, 4], @white_pawn)
+        @board_manager.set_location([7, 6], @white_pawn)
+        @board_manager.set_location([6, 6], @white_pawn)
+        # @board_manager.set_location([6, 4], @white_pawn)
+        # @board_manager.set_location([1, 6], @white_pawn)
+
+        @board_manager.set_location([5, 5], @white_queen)
+
+        subject.color = 'black'
+
+        allow(@board_manager).to receive(:get_location).and_return('x')
+        allow(@board_manager).to receive(:get_location).with([7, 5]).and_return(@black_king)
+        # allow(@board_manager).to receive(:get_location).with([0, 3]).and_return(@white_pawn)
+
+        allow(@black_king).to receive(:get_moves).and_return([[6, 4]])
+        allow(@white_queen).to receive(:get_moves).and_return([[7, 5], [6, 5]])
+
+        allow(@white_pawn).to receive(:get_moves).and_return([[]])
+        allow(@board_manager).to receive(:get_threatend_squares).with('black').and_return([[7, 5], [6, 5]])
+
+        expected = [[7, 5], [6, 4]]
         expect(subject.get_out_of_check).to match_array(expected)
       end
     end
