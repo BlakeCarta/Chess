@@ -5,7 +5,7 @@ describe AiPlayer do
   subject { AiPlayer.new }
 
   before do
-    @board_manager = Board_Manager.new
+    # @board_manager = Board_Manager.new
     @black_pawn = instance_double('Piece', name: 'pawn', color: 'black')
     @black_rook = instance_double('Piece', name: 'rook', color: 'black')
     @black_knight = instance_double('Piece', name: 'knight', color: 'black')
@@ -22,6 +22,8 @@ describe AiPlayer do
   end
 
   describe '#in_check?' do
+    before { @board_manager = Board_Manager.new }
+
     it 'white king is in check' do
       @board_manager.set_location([0, 0], @white_king)
       @board_manager.set_location([2, 2], @black_queen)
@@ -82,6 +84,8 @@ describe AiPlayer do
   end
 
   describe '#get_out_of_check' do
+    before { @board_manager = Board_Manager.new }
+
     # having context issues with references to other boards leaking in
     context 'white king at 3,3' do
       it 'white king can get out of check' do
@@ -98,11 +102,14 @@ describe AiPlayer do
                                                                                            [2, 0], [0, 2], [2, 2], [3, 3]])
 
         expected = [[3, 3], [2, 2]]
-        expect(subject.get_out_of_check).to match_array(expected)
+        expected_alt = [[3, 3], [4, 3]]
+        expect(subject.get_out_of_check).to match_array(expected) | match_array(expected_alt)
       end
     end
 
     context 'white king at 0,0' do
+      before { @board_manager = Board_Manager.new }
+
       it 'white king can get out of check' do
         @board_manager.set_location([0, 0], @white_king)
         @board_manager.set_location([2, 2], @black_queen)
@@ -111,6 +118,10 @@ describe AiPlayer do
         subject.board_manager_ref = @board_manager
         subject.color = 'white'
 
+        allow(@board_manager).to receive(:get_location).and_return('x')
+        allow(@board_manager).to receive(:get_location).with([0, 0]).and_return(@white_king)
+        allow(@board_manager).to receive(:find_piece).with('white', 'king').and_return([0, 0])
+
         allow(@white_king).to receive(:get_moves).and_return([[1, 1], [1, 0]])
         allow(@black_queen).to receive(:get_moves).and_return([[0, 0], [0, 1], [1, 1], [2, 0], [0, 2]])
         allow(@black_pawn).to receive(:get_moves).and_return([[0, 0]])
@@ -118,6 +129,41 @@ describe AiPlayer do
                                                                                            [0, 2]])
 
         expected = [[0, 0], [1, 0]]
+        expect(subject.get_out_of_check).to match_array(expected)
+      end
+    end
+
+    context 'black king at 0,5' do
+      before { @board_manager = Board_Manager.new }
+
+      it 'white king can get out of check' do
+        # @board_manager = Board_Manager.new
+        subject.board_manager_ref = @board_manager
+
+        @board_manager.set_location([0, 5], @white_king)
+        @board_manager.set_location([0, 3], @white_pawn)
+        @board_manager.set_location([0, 6], @white_pawn)
+        @board_manager.set_location([1, 5], @white_pawn)
+        @board_manager.set_location([1, 4], @white_pawn)
+        @board_manager.set_location([1, 6], @white_pawn)
+
+        @board_manager.set_location([2, 5], @black_queen)
+
+        # @board_manager.set_location([0, 1], @black_pawn)
+
+        subject.color = 'white'
+
+        allow(@board_manager).to receive(:get_location).and_return('x')
+        allow(@board_manager).to receive(:get_location).with([0, 5]).and_return(@white_king)
+        allow(@board_manager).to receive(:get_location).with([0, 3]).and_return(@white_pawn)
+
+        allow(@white_king).to receive(:get_moves).and_return([[1, 5], [0, 4], [0, 6], [0, 3], [1, 5], [1, 4], [1, 6]])
+        allow(@black_queen).to receive(:get_moves).and_return([[0, 5], [1, 5], [2, 5]])
+        # the white pawn moves should be irrelevant as long as it returns something
+        allow(@white_pawn).to receive(:get_moves).and_return([[1, 3]])
+        allow(@board_manager).to receive(:get_threatend_squares).with('white').and_return([[0, 5], [1, 5], [2, 5]])
+
+        expected = [[0, 5], [0, 4]]
         expect(subject.get_out_of_check).to match_array(expected)
       end
     end

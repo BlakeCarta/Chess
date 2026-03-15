@@ -9,22 +9,8 @@ class AiPlayer < Player
   attr_accessor :board_manager_ref
 
   def make_move
-    # Alternate b/w the furtherest forward piece and a random one
-    # 1st turn starts with a pawn
-    # 2nd turn random
-    # 3rd Most forward piece
-    # 4th random
-    #
-    # Allow for check/checkmate checks to eliminate moves
-    # Allow for check/checkmate to become the move
-    # Of all moves generated select a random one
-    # no need for a more complicated algo
-    #
-    # Well checkmate ends game, so only need to validate checks
-    #
     if in_check?
       # Should always be able to get out of check
-      # the game would be over if that wasnt the case
       get_out_of_check
     elsif random_turn?
       get_random_piece
@@ -45,8 +31,6 @@ class AiPlayer < Player
     threat_info = find_check_threat
     piece_to_move = find_piece_to_stop_check(threat_info)
 
-    # not sure if this logic pans out, like it might need to move to block
-    # this assumes it can only move to destroy
     move_piece(piece_to_move[:piece_location], piece_to_move[:destination])
   end
 
@@ -76,41 +60,90 @@ class AiPlayer < Player
   end
 
   def find_piece_to_stop_check(threat_info)
+    king_location = find_king
     get_all_pieces.map do |piece_location|
-      moves = @board_manager_ref.get_location(piece_location).get_moves(@board_manager_ref)
+      piece_ref = @board_manager_ref.get_location(piece_location)
+      next if piece_ref.is_a?(String)
+
+      moves = piece_ref.get_moves(@board_manager_ref)
       # check if the threat itself can be eliminated, if so make that move
-      if moves.include?(threat_info[:threat_origin])
+      if piece_location != king_location
+        if moves.include?(threat_info[:threat_origin])
+          unless destination.nil?
+            return { piece_location: piece_location,
+                     destination: threat_info[:threat_origin] }
+          end
+        elsif can_intercept_threat?(moves, threat_info)
+          destination = get_intercept_destination(moves, threat_info)
+
+          unless destination.nil?
+            return { piece_location: piece_location,
+                     destination: destination }
+          end
+        elsif can_block_threat?(moves, threat_info)
+          destination = get_block_destination(moves)
+
+          unless destination.nil?
+            return { piece_location: piece_location,
+                     destination: destination }
+          end
+        end
+      elsif can_king_escape_threat?
+        destination = get_king_escape_destination
+
+        unless destination.nil?
+          return { piece_location: piece_location,
+                   destination: destination }
+        end
+      elsif destination.nil? && moves.include?(threat_info[:threat_origin])
+        # if king can kill the threat do so instead
         return { piece_location: piece_location,
                  destination: threat_info[:threat_origin] }
-      elsif can_intercept_threat?(moves, threat_info)
-        destination = get_intercept_destination
 
-        return { piece_location: piece_location,
-                 destination: destination }
-      elsif can_escape_threat?(moves)
-        destination = get_escape_destination(moves)
-
-        return { piece_location: piece_location,
-                 destination: destination }
       end
     end
   end
 
-  def can_escape_threat?(moves)
-    !get_escape_destination(moves).nil?
+  def can_block_threat?(moves, threat_info)
+    !get_block_destination(moves, threat_info).nil?
   end
 
-  def get_escape_destination(moves)
-    threats = @board_manager_ref.get_threatend_squares(color)
-    king_location = find_king
+  def get_block_destination(moves, threat_info)
+    destinations = []
+
+    threat_info[:threat_origin]
+    threat_info[:threat_spaces]
+
     moves.select do |move|
-      !threats.include?(move) && move != king_location
-    end.first
+      location = @board_manager_ref.get_location(move)
+      if (threat_info[:threat_spaces].include?(move) || threat_info[:threat_origin] == move) && (location.is_a?(String) || location.color != color)
+        destinations << move
+      end
+    end
+
+    destinations.empty? ? destinations.first : nil
   end
 
-  # cant handle multiple threating pieces
+  def can_king_escape_threat?
+    !get_king_escape_destination.nil?
+  end
+
+  def get_king_escape_destination
+    threats = @board_manager_ref.get_threatend_squares(color)
+    king = @board_manager_ref.get_location(find_king)
+    # king = find_king
+    destinations = []
+    king.get_moves(@board_manager_ref).map do |move|
+      location = @board_manager_ref.get_location(move)
+      destinations << move if !threats.include?(move) && (location.is_a?(String) || location.color != color)
+    end
+    destinations.empty? ? nil : destinations.first
+  end
+
+  # returns the threating piece that can attack the most spaces
   def find_check_threat
     king_location = find_king
+    all_threats = []
     @board_manager_ref.get_board.each_with_index do |row, index|
       row.each_with_index do |square, col_index|
         next if square.is_a?(String)
@@ -118,11 +151,13 @@ class AiPlayer < Player
 
         threat_spaces = square.get_moves(@board_manager_ref)
         if threat_spaces.include?(king_location)
-          return { threat_spaces: threat_spaces, king_location: king_location, threat_origin: [index, col_index] }
+          all_threats << { threat_spaces: threat_spaces, king_location: king_location,
+                           threat_origin: [index, col_index] }
         end
       end
     end
-    nil
+    # ascending order
+    all_threats.empty? ? nil : all_threats.sort_by { |threat_info| threat_info[:threat_spaces].size }.last
   end
 
   def update_threats
