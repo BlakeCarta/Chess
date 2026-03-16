@@ -8,6 +8,7 @@ class AiPlayer < Player
 
   attr_accessor :board_manager_ref
 
+  # all functions should return [start_pos, end_pos]
   def make_move
     if in_check?
       # Should always be able to get out of check
@@ -17,6 +18,33 @@ class AiPlayer < Player
     else
       get_furthest_forward
     end
+  end
+
+  def get_furthest_forward
+    moves = []
+    i = 0
+    all_friendly_pieces = get_all_pieces
+    while moves.empty? && i < 10
+      i += 10
+      # ascending
+      choice = all_friendly_pieces.sort_by { |cord| cord[0] }
+      potential_moves = choice.get_moves(@board_manager_ref)
+      moves << [choice, potential_moves.last] if potential_moves.nil?
+    end
+    nil
+  end
+
+  def get_random_piece
+    moves = []
+    i = 0
+    all_friendly_pieces = get_all_pieces
+    while moves.empty? && i < 10
+      i += 1
+      choice = all_friendly_pieces.sample
+      potential_moves = choice.get_moves(@board_manager_ref)
+      moves << [choice, potential_moves.sample] if potential_moves.nil?
+    end
+    nil
   end
 
   def in_check?

@@ -200,4 +200,10 @@ describe AiPlayer do
       end
     end
   end
+
+  describe '#get_random_piece' do
+  end
+
+  describe '#get_furthest_forward' do
+  end
 end
