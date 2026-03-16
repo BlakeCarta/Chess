@@ -202,6 +202,31 @@ describe AiPlayer do
   end
 
   describe '#get_random_piece' do
+    before { @board_manager = Board_Manager.new }
+
+    context 'Selects a pawn out of only pawns' do
+      it 'white pawns only' do
+        @board_manager.set_location([0, 0], @white_pawn)
+        @board_manager.set_location([0, 1], @white_pawn)
+        @board_manager.set_location([0, 2], @white_pawn)
+        @board_manager.set_location([0, 3], @white_pawn)
+        @board_manager.set_location([0, 4], @white_pawn)
+
+        subject.board_manager_ref = @board_manager
+        subject.color = 'white'
+
+        # exact moves should not matter
+        allow(@white_pawn).to receive(:get_moves).and_return([[2, 0], [1, 0]])
+        # allow(@board_manager).to receive(:get_threatend_squares).with('white').and_return([[0, 0], [0, 1], [1, 1],
+        # [2, 0], [0, 2], [2, 2], [3, 3]])
+        allow(@board_manager).to receive(:get_location).and_return(@white_pawn)
+
+        expected = [[1, 0]]
+        random_piece = subject.get_random_piece
+        expect(random_piece[0][0]).to eq(0)
+        expect(random_piece[1]).to match_array(expected)
+      end
+    end
   end
 
   describe '#get_furthest_forward' do

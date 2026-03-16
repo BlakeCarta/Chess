@@ -41,10 +41,10 @@ class AiPlayer < Player
     while moves.empty? && i < 10
       i += 1
       choice = all_friendly_pieces.sample
-      potential_moves = choice.get_moves(@board_manager_ref)
-      moves << [choice, potential_moves.sample] if potential_moves.nil?
+      potential_moves = @board_manager_ref.get_location(choice).get_moves(@board_manager_ref)
+      moves = [choice, potential_moves.sample] unless potential_moves.nil?
     end
-    nil
+    moves.empty? ? nil : moves
   end
 
   def in_check?
