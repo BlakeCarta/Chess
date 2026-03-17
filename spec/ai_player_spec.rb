@@ -270,12 +270,6 @@ describe AiPlayer do
           subject.color = 'black'
 
           allow(@black_pawn).to receive(:get_moves).and_return([[5, 7]])
-          # allow(@board_manager).to receive(:get_location).and_return(@empty_square)
-          # allow(@board_manager).to receive(:get_location).with(pawn_pos).and_return(@black_pawn)
-          # allow(@board_manager).to receive(:get_location).with([0, 1]).and_return(@white_pawn)
-          # allow(@board_manager).to receive(:get_location).with([0, 2]).and_return(@white_pawn)
-          # allow(@board_manager).to receive(:get_location).with([0, 3]).and_return(@white_pawn)
-          # allow(@board_manager).to receive(:get_location).with([0, 4]).and_return(@white_pawn)
 
           random_piece = subject.get_random_piece
           # check chosen piece
