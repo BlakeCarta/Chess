@@ -215,16 +215,34 @@ describe AiPlayer do
         subject.board_manager_ref = @board_manager
         subject.color = 'white'
 
-        # exact moves should not matter
         allow(@white_pawn).to receive(:get_moves).and_return([[2, 0], [1, 0]])
-        # allow(@board_manager).to receive(:get_threatend_squares).with('white').and_return([[0, 0], [0, 1], [1, 1],
-        # [2, 0], [0, 2], [2, 2], [3, 3]])
         allow(@board_manager).to receive(:get_location).and_return(@white_pawn)
 
         expected = [1, 0]
         random_piece = subject.get_random_piece
         expect(random_piece[0][0]).to eq(0)
         expect(random_piece[1]).to match_array(expected)
+      end
+    end
+
+    context 'Selects the only pawn out of mostly enemy pawns' do
+      it 'selects the white pawn among the black pawns' do
+        @board_manager.set_location([5, 5], @white_pawn)
+        @board_manager.set_location([0, 1], @black_pawn)
+        @board_manager.set_location([0, 2], @black_pawn)
+        @board_manager.set_location([0, 3], @black_pawn)
+        @board_manager.set_location([0, 4], @black_pawn)
+
+        subject.board_manager_ref = @board_manager
+        subject.color = 'white'
+
+        allow(@white_pawn).to receive(:get_moves).and_return([[6, 5]])
+        allow(@board_manager).to receive(:get_location).and_return(@white_pawn)
+        expected = [6, 5]
+        random_piece = subject.get_random_piece
+        # check chosen piece
+        pawn_pos = [5, 5]
+        expect(random_piece[0]).to match_array(pawn_pos)
       end
     end
   end
