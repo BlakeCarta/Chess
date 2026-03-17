@@ -320,7 +320,7 @@ describe AiPlayer do
         allow(@white_bishop).to receive(:get_moves).and_return([[5, 7], [4, 6]])
         allow(@board_manager).to receive(:get_location).and_return('x')
         allow(@board_manager).to receive(:get_location).with([3, 5]).and_return(@white_bishop)
-        allow(@board_manager).to receive(:get_location).with([1, 1]).and_return(@white_bishop)
+        allow(@board_manager).to receive(:get_location).with([1, 1]).and_return(@white_pawn)
 
         random_piece = subject.get_furthest_forward
         # check chosen piece
