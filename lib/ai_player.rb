@@ -23,7 +23,7 @@ class AiPlayer < Player
   def get_furthest_forward
     moves = []
     i = 0
-    all_friendly_pieces = get_all_pieces
+    all_friendly_pieces = get_all_friendly_pieces
     while moves.empty? && i < 10
       i += 10
       # ascending
@@ -37,11 +37,12 @@ class AiPlayer < Player
   def get_random_piece
     moves = []
     i = 0
-    all_friendly_pieces = get_all_pieces
+    all_friendly_pieces = get_all_friendly_pieces
     while moves.empty? && i < 10
       i += 1
       choice = all_friendly_pieces.sample
       potential_moves = @board_manager_ref.get_location(choice).get_moves(@board_manager_ref)
+      # return format is location(choice in this case), and a destination it can move to
       moves = [choice, potential_moves.sample] unless potential_moves.nil?
     end
     moves.empty? ? nil : moves
@@ -89,7 +90,7 @@ class AiPlayer < Player
 
   def find_piece_to_stop_check(threat_info)
     king_location = find_king
-    get_all_pieces.map do |piece_location|
+    get_all_friendly_pieces.map do |piece_location|
       piece_ref = @board_manager_ref.get_location(piece_location)
       next if piece_ref.is_a?(String)
 
@@ -197,7 +198,7 @@ class AiPlayer < Player
     @board_manager_ref.find_piece(color, 'king')
   end
 
-  def get_all_pieces
+  def get_all_friendly_pieces
     potential_pieces = []
     @board_manager_ref.get_board.each_with_index do |row, index|
       row.each_with_index do |square, col_index|

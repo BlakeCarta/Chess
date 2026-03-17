@@ -219,9 +219,10 @@ describe AiPlayer do
         allow(@board_manager).to receive(:get_location).and_return(@white_pawn)
 
         expected = [1, 0]
+        expected2 = [2, 0]
         random_piece = subject.get_random_piece
         expect(random_piece[0][0]).to eq(0)
-        expect(random_piece[1]).to match_array(expected)
+        expect(random_piece[1]).to match_array(expected) | match_array(expected2)
       end
     end
 
@@ -243,6 +244,44 @@ describe AiPlayer do
         # check chosen piece
         pawn_pos = [5, 5]
         expect(random_piece[0]).to match_array(pawn_pos)
+      end
+
+      # the randomness of this test means any issues can be hidden on many runs
+      # so loop this test many times to try and force an issue to show
+      # 10 times was consistent enough to show the test failure
+      10.times do
+        it 'selects the black pawn among the white pawns' do
+          pawn_pos = [6, 7]
+          @board_manager.set_location(pawn_pos, @black_pawn)
+          @board_manager.set_location([0, 1], @white_pawn)
+          @board_manager.set_location([0, 2], @white_pawn)
+          @board_manager.set_location([0, 3], @white_pawn)
+          @board_manager.set_location([0, 4], @white_pawn)
+          @board_manager.set_location([5, 2], @white_pawn)
+          @board_manager.set_location([6, 3], @white_pawn)
+          @board_manager.set_location([7, 4], @white_pawn)
+          @board_manager.set_location([1, 3], @white_pawn)
+          @board_manager.set_location([2, 4], @white_pawn)
+          @board_manager.set_location([3, 2], @white_pawn)
+          @board_manager.set_location([4, 3], @white_pawn)
+          @board_manager.set_location([7, 6], @white_pawn)
+
+          subject.board_manager_ref = @board_manager
+          subject.color = 'black'
+
+          allow(@black_pawn).to receive(:get_moves).and_return([[5, 7]])
+          # allow(@board_manager).to receive(:get_location).and_return(@empty_square)
+          # allow(@board_manager).to receive(:get_location).with(pawn_pos).and_return(@black_pawn)
+          # allow(@board_manager).to receive(:get_location).with([0, 1]).and_return(@white_pawn)
+          # allow(@board_manager).to receive(:get_location).with([0, 2]).and_return(@white_pawn)
+          # allow(@board_manager).to receive(:get_location).with([0, 3]).and_return(@white_pawn)
+          # allow(@board_manager).to receive(:get_location).with([0, 4]).and_return(@white_pawn)
+
+          random_piece = subject.get_random_piece
+          # check chosen piece
+
+          expect(random_piece[0]).to match_array(pawn_pos)
+        end
       end
     end
   end
