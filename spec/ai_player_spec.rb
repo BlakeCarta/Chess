@@ -328,5 +328,44 @@ describe AiPlayer do
         expect(random_piece[0]).to match_array(bishop_pos)
       end
     end
+
+    context 'mixed pieces' do
+      before do
+        @board_manager.set_location([6, 0], @white_pawn)
+        @board_manager.set_location([5, 0], @white_rook)
+        @board_manager.set_location([1, 5], @white_king)
+        @board_manager.set_location([6, 2], @black_pawn)
+        @board_manager.set_location([5, 3], @black_rook)
+
+        allow(@white_pawn).to receive(:get_moves).and_return([[7, 0]])
+        allow(@black_rook).to receive(:get_moves).and_return([[6, 3], [7, 3]])
+        allow(@board_manager).to receive(:get_location).and_return('x')
+        allow(@board_manager).to receive(:get_location).with([6, 0]).and_return(@white_pawn)
+        allow(@board_manager).to receive(:get_location).with([5, 0]).and_return(@white_rook)
+        allow(@board_manager).to receive(:get_location).with([1, 5]).and_return(@white_king)
+        allow(@board_manager).to receive(:get_location).with([6, 2]).and_return(@black_rook)
+        allow(@board_manager).to receive(:get_location).with([5, 3]).and_return(@black_rook)
+      end
+
+      it 'selects the friendly pawn' do
+        subject.board_manager_ref = @board_manager
+        subject.color = 'white'
+
+        random_piece = subject.get_furthest_forward
+        # check chosen piece
+        pawn_pos = [6, 0]
+        expect(random_piece[0]).to match_array(pawn_pos)
+      end
+
+      it 'black selects the friendly pawn' do
+        subject.board_manager_ref = @board_manager
+        subject.color = 'black'
+
+        random_piece = subject.get_furthest_forward
+        # check chosen piece
+        rook_pos = [5, 3]
+        expect(random_piece[0]).to match_array(rook_pos)
+      end
+    end
   end
 end

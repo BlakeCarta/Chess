@@ -27,7 +27,12 @@ class AiPlayer < Player
     while moves.empty? && i < 10
       i += 10
       # ascending
-      choice = all_friendly_pieces.sort_by { |cord| cord[0] }.last
+      choice = all_friendly_pieces.sort_by { |cord| cord[0] }
+      choice = if color == 'white'
+                 choice.last
+               else
+                 choice.first
+               end
       choice_piece = @board_manager_ref.get_location(choice)
       next if choice_piece.is_a?(String)
 
