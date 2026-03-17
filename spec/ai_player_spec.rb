@@ -5,7 +5,6 @@ describe AiPlayer do
   subject { AiPlayer.new }
 
   before do
-    # @board_manager = Board_Manager.new
     @black_pawn = instance_double('Piece', name: 'pawn', color: 'black')
     @black_rook = instance_double('Piece', name: 'rook', color: 'black')
     @black_knight = instance_double('Piece', name: 'knight', color: 'black')
