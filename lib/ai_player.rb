@@ -27,11 +27,14 @@ class AiPlayer < Player
     while moves.empty? && i < 10
       i += 10
       # ascending
-      choice = all_friendly_pieces.sort_by { |cord| cord[0] }
-      potential_moves = choice.get_moves(@board_manager_ref)
-      moves << [choice, potential_moves.last] if potential_moves.nil?
+      choice = all_friendly_pieces.sort_by { |cord| cord[0] }.last
+      choice_piece = @board_manager_ref.get_location(choice)
+      next if choice_piece.is_a?(String)
+
+      potential_moves = choice_piece.get_moves(@board_manager_ref)
+      moves = [choice, potential_moves.last] unless potential_moves.nil?
     end
-    nil
+    moves.empty? ? nil : moves
   end
 
   def get_random_piece

@@ -290,8 +290,14 @@ describe AiPlayer do
         subject.board_manager_ref = @board_manager
         subject.color = 'white'
 
-        allow(@white_pawn).to receive(:get_moves).and_return([[1, 7]])
-        allow(@board_manager).to receive(:get_location).and_return(@white_pawn)
+        allow(@white_bishop).to receive(:get_moves).with(@board_manager).and_return([[1, 7]])
+        allow(@board_manager).to receive(:get_location).and_return('x')
+        allow(@board_manager).to receive(:get_location).with([0, 6]).and_return(@white_bishop)
+        allow(@board_manager).to receive(:get_location).with([6, 1]).and_return(@white_pawn)
+        allow(@board_manager).to receive(:get_location).with([7, 2]).and_return(@white_pawn)
+        allow(@board_manager).to receive(:get_location).with([5, 3]).and_return(@white_pawn)
+        allow(@board_manager).to receive(:get_location).with([4, 4]).and_return(@white_pawn)
+
         random_piece = subject.get_random_piece
         # check chosen piece
         pawn_pos = [0, 6]
@@ -301,5 +307,26 @@ describe AiPlayer do
   end
 
   describe '#get_furthest_forward' do
+    before { @board_manager = Board_Manager.new }
+
+    context 'only friendly pieces' do
+      it 'selects the bishop' do
+        @board_manager.set_location([3, 5], @white_bishop)
+        @board_manager.set_location([1, 1], @white_pawn)
+
+        subject.board_manager_ref = @board_manager
+        subject.color = 'white'
+
+        allow(@white_bishop).to receive(:get_moves).and_return([[5, 7], [4, 6]])
+        allow(@board_manager).to receive(:get_location).and_return('x')
+        allow(@board_manager).to receive(:get_location).with([3, 5]).and_return(@white_bishop)
+        allow(@board_manager).to receive(:get_location).with([1, 1]).and_return(@white_bishop)
+
+        random_piece = subject.get_furthest_forward
+        # check chosen piece
+        bishop_pos = [3, 5]
+        expect(random_piece[0]).to match_array(bishop_pos)
+      end
+    end
   end
 end
