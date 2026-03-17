@@ -221,7 +221,7 @@ describe AiPlayer do
         # [2, 0], [0, 2], [2, 2], [3, 3]])
         allow(@board_manager).to receive(:get_location).and_return(@white_pawn)
 
-        expected = [[1, 0]]
+        expected = [1, 0]
         random_piece = subject.get_random_piece
         expect(random_piece[0][0]).to eq(0)
         expect(random_piece[1]).to match_array(expected)
