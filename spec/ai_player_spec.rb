@@ -278,6 +278,26 @@ describe AiPlayer do
         end
       end
     end
+
+    context 'Can select a piece other than pawns' do
+      it 'can select a bishop' do
+        @board_manager.set_location([0, 6], @white_bishop)
+        @board_manager.set_location([6, 1], @black_pawn)
+        @board_manager.set_location([7, 2], @black_pawn)
+        @board_manager.set_location([5, 3], @black_pawn)
+        @board_manager.set_location([4, 4], @black_pawn)
+
+        subject.board_manager_ref = @board_manager
+        subject.color = 'white'
+
+        allow(@white_pawn).to receive(:get_moves).and_return([[1, 7]])
+        allow(@board_manager).to receive(:get_location).and_return(@white_pawn)
+        random_piece = subject.get_random_piece
+        # check chosen piece
+        pawn_pos = [0, 6]
+        expect(random_piece[0]).to match_array(pawn_pos)
+      end
+    end
   end
 
   describe '#get_furthest_forward' do
