@@ -56,8 +56,10 @@ describe GameManager do
           board = subject.show_board
 
           test = [board[2], board[3]].flatten.all? { |each| each.is_a?(String) }
+          black_test = test = [board[5], board[4]].flatten.all? { |each| each.is_a?(String) }
           # a white piece is in row 3/4
           expect(test).to be false
+          expect(black_test).to be false
         end
       end
     end
