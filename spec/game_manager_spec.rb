@@ -44,6 +44,19 @@ describe GameManager do
       end
     end
 
+    describe '#play_round' do
+      context 'default board start' do
+        it 'moves 1 white & 1 black piece' do
+          subject.play_round
+          board = subject.show_board
+
+          test = [board[2], board[3]].flatten.all? { |each| each.is_a?(String) }
+          # a white piece is in row 3/4
+          expect(test).to be false
+        end
+      end
+    end
+
     describe '#start_message' do
       it 'returns a start message' do
         expect(subject.start_message).to eq('Welcome to chess, game will start shortly!')
