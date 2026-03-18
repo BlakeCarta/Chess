@@ -46,9 +46,9 @@ module EnPassantFunctions
   def get_target_posistions
     target_posistions = [get_posistion[0], get_posistion[1] + 1], [get_posistion[0], get_posistion[1] - 1]
     target_posistions.select do |posistion|
-      posistion.map do |cord|
+      posistion.all? do |cord|
         cord.between?(0, 7)
-      end && !@board_manager.get_location(posistion).is_a?(String) && @board_manager.get_location(posistion).name == 'pawn'
+      end && !@board_manager.get_location(posistion).is_a?(String) && @board_manager.get_location(posistion)&.name == 'pawn'
     end
   end
 

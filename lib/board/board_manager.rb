@@ -33,7 +33,9 @@ class Board_Manager
 
   def move_piece(location, target_location)
     captured_piece = nil
-    captured_piece = add_to_capture_history(get_location(target_location)) unless get_location(target_location).nil?
+    unless get_location(target_location).nil? || get_location(target_location) == 'x'
+      captured_piece = add_to_capture_history(get_location(target_location))
+    end
 
     set_location(target_location, get_location(location))
     set_location(location, nil)

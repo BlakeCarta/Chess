@@ -11,22 +11,30 @@ class GameManager
     @input_manager = Input_Manager
     @board_manager = Board_Manager.new
     @player = HumanPlayer.new
-    @ai_player = AiPlayer.new
+    @ai_player = AiPlayer.new(@board_manager)
   end
 
   attr_accessor :input_manager, :board_manager, :player, :ai_player
+
+  def play_game
+  end
+
+  def play_round
+    player_turn
+    # TODO: check for checkmate
+    # TODO: update any scores
+    ai_turn
+    # TODO: check for checkmate
+    # TODO: update any scores
+  end
 
   def start_message
     'Welcome to chess, game will start shortly!'
   end
 
-  def set_default_colors
-    @player.color = 'white'
-    @ai_player.color = 'black'
-  end
-
-  def set_board
-    @board_manager.setup_board
+  def default_start
+    set_default_colors
+    set_board
   end
 
   def show_board
@@ -36,7 +44,8 @@ class GameManager
   def valid_player_move?(player_input)
     return false if player_input.nil? || player_input == 'save' || player_input == 'load'
 
-    move_list = @board_manager.get_location(player_input[1]).get_moves(@board_manager)
+    return_cordinates = true
+    move_list = @board_manager.get_location(player_input[1]).get_moves(@board_manager, return_cordinates)
     player_input[0] == 'move' && move_list.include?(player_input[2])
   end
 
@@ -62,12 +71,22 @@ class GameManager
     loop do
       puts ai_player_turn_message
       ai_action = @ai_player.make_move(@board_manager)
+      ai_action.unshift('move')
       # break if valid move otherwise, try again
       break if determine_player_action(ai_action)
     end
   end
 
   private
+
+  def set_default_colors
+    @player.color = 'white'
+    @ai_player.color = 'black'
+  end
+
+  def set_board
+    @board_manager.setup_board
+  end
 
   def ai_player_turn_message
     'The computer will now make a move!'

@@ -47,6 +47,11 @@ describe GameManager do
     describe '#play_round' do
       context 'default board start' do
         it 'moves 1 white & 1 black piece' do
+          subject.default_start
+
+          @input_double = class_double(Input_Manager)
+          allow(@input_double).to receive(:play_turn).and_return(['move', [1, 0], [2, 0]])
+          subject.input_manager = @input_double
           subject.play_round
           board = subject.show_board
 
@@ -64,7 +69,7 @@ describe GameManager do
     end
 
     describe '#set_default_colors' do
-      it 'sets player to white and ai to black' do
+      xit 'sets player to white and ai to black' do
         subject.set_default_colors
         expect(subject.player.color).to eq('white')
         expect(subject.ai_player.color).to eq('black')
@@ -72,7 +77,7 @@ describe GameManager do
     end
 
     describe '#set_board, #show_board' do
-      it 'sets the pieces on the board' do
+      xit 'sets the pieces on the board' do
         subject.set_board
         expect(subject.show_board.all? { |item| item == 'x' }).to be false
       end

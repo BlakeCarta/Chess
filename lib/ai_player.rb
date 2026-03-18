@@ -9,7 +9,8 @@ class AiPlayer < Player
   attr_accessor :board_manager_ref
 
   # all functions should return [start_pos, end_pos]
-  def make_move
+  def make_move(updated_board_ref)
+    @board_manager_ref = updated_board_ref
     if in_check?
       # Should always be able to get out of check
       get_out_of_check
@@ -36,7 +37,8 @@ class AiPlayer < Player
       choice_piece = @board_manager_ref.get_location(choice)
       next if choice_piece.is_a?(String)
 
-      potential_moves = choice_piece.get_moves(@board_manager_ref)
+      return_cordinates = true
+      potential_moves = choice_piece.get_moves(@board_manager_ref, return_cordinates)
       moves = [choice, potential_moves.last] unless potential_moves.nil?
     end
     moves.empty? ? nil : moves
