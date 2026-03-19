@@ -62,7 +62,7 @@ describe GameManager do
           expect(black_test).to be false
         end
 
-        it 'can play multiple rounds' do
+        it 'can play two rounds' do
           subject.default_start
 
           @input_double = class_double(Input_Manager)
