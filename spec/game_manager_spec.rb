@@ -84,8 +84,10 @@ describe GameManager do
     end
 
     describe '#set_default_colors' do
-      xit 'sets player to white and ai to black' do
-        subject.set_default_colors
+      it 'sets player to white and ai to black' do
+        # default start is now a private function, but this function calls it
+        subject.default_start
+
         expect(subject.player.color).to eq('white')
         expect(subject.ai_player.color).to eq('black')
       end
