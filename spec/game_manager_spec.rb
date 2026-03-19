@@ -74,6 +74,18 @@ describe GameManager do
 
           expect(board[4][3].is_a?(String)).to be false
         end
+
+        xit 'will stop on checkmate' do
+        end
+
+        xit 'can detect a check' do
+        end
+
+        xit 'prints the board after each round' do
+        end
+
+        xit 'updates the capture history' do
+        end
       end
     end
 
