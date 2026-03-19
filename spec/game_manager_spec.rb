@@ -61,6 +61,26 @@ describe GameManager do
           expect(test).to be false
           expect(black_test).to be false
         end
+
+        it 'can play multiple rounds' do
+          subject.default_start
+
+          @input_double = class_double(Input_Manager)
+          allow(@input_double).to receive(:play_turn).and_return(['move', [1, 3], [3, 3]], ['move', [3, 3], [4, 3]])
+          subject.input_manager = @input_double
+          # infinite loop, not sure if its generating the right moves
+          # might not be updating the board, despite looking like it
+          # move history might not be updating
+          subject.play_round
+          subject.play_round
+          board = subject.show_board
+
+          expect(board[4][3].is_a?(String)).to be false
+        end
+
+        xit 'placeholder test for move history not being updated on a pawn' do
+          # fix later
+        end
       end
     end
 

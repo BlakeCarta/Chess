@@ -38,6 +38,7 @@ class Board_Manager
     end
 
     set_location(target_location, get_location(location))
+    get_location(target_location).set_new_posistion(target_location) unless get_location(target_location).is_a?(String)
     set_location(location, nil)
 
     fix_board
