@@ -85,7 +85,7 @@ describe GameManager do
 
     describe '#set_default_colors' do
       it 'sets player to white and ai to black' do
-        # default start is now a private function, but this function calls it
+        # default colors is now a private function, but this function calls it
         subject.default_start
 
         expect(subject.player.color).to eq('white')
@@ -94,8 +94,9 @@ describe GameManager do
     end
 
     describe '#set_board, #show_board' do
-      xit 'sets the pieces on the board' do
-        subject.set_board
+      it 'sets the pieces on the board' do
+        # set board is now a private function, but this function calls it
+        subject.default_start
         expect(subject.show_board.all? { |item| item == 'x' }).to be false
       end
     end
