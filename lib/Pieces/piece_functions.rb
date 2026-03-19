@@ -135,7 +135,7 @@ module Piece_functions
 
   def simple_move
     # pawns cant move 2 spaces if it has already moved
-    @moves.shift if pawn_moved?
+    @moves.shift if pawn_moved? && @moves.size == 2
 
     @root.children.keep_if { |piece| capture?(piece.get_posistion) || empty_square?(piece.get_posistion) }
   end
