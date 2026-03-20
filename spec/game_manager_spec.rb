@@ -194,4 +194,12 @@ describe GameManager do
       end
     end
   end
+
+  context 'Save/Load Functions' do
+    xit '(placeholder) can save a game' do
+    end
+
+    xit '(placeholder) can load a game' do
+    end
+  end
 end
