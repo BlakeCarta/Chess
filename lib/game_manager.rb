@@ -41,6 +41,14 @@ class GameManager
     @board_manager.get_board
   end
 
+  def get_capture_history
+    @board_manager.capture_history
+  end
+
+  def get_full_move_history
+    @board_manager.full_move_history
+  end
+
   def valid_player_move?(player_input)
     return false if player_input.nil? || player_input == 'save' || player_input == 'load'
 
