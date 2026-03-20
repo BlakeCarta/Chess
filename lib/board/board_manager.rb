@@ -41,6 +41,8 @@ class Board_Manager
     get_location(target_location).set_new_posistion(target_location) unless get_location(target_location).is_a?(String)
     set_location(location, nil)
 
+    add_to_full_move_history(location, target_location)
+
     fix_board
 
     captured_piece
@@ -120,5 +122,9 @@ class Board_Manager
         set_location([row - 1, col - 1], 'x') if square.nil?
       end
     end
+  end
+
+  def add_to_full_move_history(original_posistion, destination)
+    @full_move_history << [original_posistion, destination]
   end
 end
