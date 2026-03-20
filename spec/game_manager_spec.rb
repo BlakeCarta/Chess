@@ -83,8 +83,37 @@ describe GameManager do
 
         xit 'prints the board after each round' do
         end
+      end
 
-        xit 'updates the capture history' do
+      context 'controlled moves' do
+        it 'updates the capture & move history of the board' do
+          @ai_double = instance_double(AiPlayer)
+          @input_double = class_double(Input_Manager)
+
+          subject.ai_player = @ai_double
+          subject.input_manager = @input_double
+
+          allow(@ai_double).to receive(:color=).with('black')
+
+          allow(@input_double).to receive(:play_turn).and_return(['move', [1, 3], [3, 3]],
+                                                                 ['move', [1, 4], [3, 4]],
+                                                                 ['move', [3, 3], [4, 3]])
+
+          allow(@ai_double).to receive(:make_move).and_return([[6, 3], [4, 3]],
+                                                              [[6, 1], [5, 1]],
+                                                              [[6, 2], [5, 2]])
+
+          subject.default_start
+
+          3.times do
+            subject.play_round
+          end
+
+          capture_history_is_empty = subject.get_capture_history.empty?
+          move_history_is_empty = subject.get_full_move_history.empty?
+
+          expect(capture_history_is_empty).to be false
+          expect(move_history_is_empty).to be false
         end
       end
     end
