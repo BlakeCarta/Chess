@@ -12,9 +12,11 @@ class GameManager
     @board_manager = Board_Manager.new
     @player = HumanPlayer.new
     @ai_player = AiPlayer.new(@board_manager)
+    @check = false
   end
 
   attr_accessor :input_manager, :board_manager, :player, :ai_player
+  attr_reader :check
 
   def play_game
   end
