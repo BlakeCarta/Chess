@@ -87,6 +87,7 @@ describe GameManager do
             subject.input_manager = @input_double
 
             allow(@ai_double).to receive(:color=).with('black')
+            allow(@ai_double).to receive(:color).and_return('black')
 
             # d2 -> d4 w
             # e7 -> e5 b
@@ -106,7 +107,7 @@ describe GameManager do
               subject.play_round
             end
 
-            is_in_check = subject.check
+            is_in_check = subject.player_in_check
 
             expect(is_in_check).to be true
           end
@@ -125,6 +126,7 @@ describe GameManager do
           subject.input_manager = @input_double
 
           allow(@ai_double).to receive(:color=).with('black')
+          allow(@ai_double).to receive(:color).and_return('black')
 
           allow(@input_double).to receive(:play_turn).and_return(['move', [1, 3], [3, 3]],
                                                                  ['move', [1, 4], [3, 4]],
