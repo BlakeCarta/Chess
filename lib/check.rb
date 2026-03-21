@@ -6,10 +6,10 @@ module CHECK
     [piece_to_move, destination]
   end
 
-  def in_check?(board_ref, color)
-    king_location = find_king(board_ref, color)
+  def in_check?(board_ref, friendly_color)
+    king_location = find_king(board_ref, friendly_color)
 
-    threatend_squares = update_threats(board_ref, color)
+    threatend_squares = update_threats(board_ref, friendly_color)
 
     threatend_squares.include?([king_location])
   end
