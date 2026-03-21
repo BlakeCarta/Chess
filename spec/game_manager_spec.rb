@@ -75,10 +75,7 @@ describe GameManager do
           expect(board[4][3].is_a?(String)).to be false
         end
 
-        xit 'will stop on checkmate' do
-        end
-
-        context 'Custom moves from start' do
+        context 'Check/Checkmate tests' do
           it 'can detect a check' do
             @ai_double = instance_double(AiPlayer)
             @input_double = class_double(Input_Manager)
@@ -111,13 +108,16 @@ describe GameManager do
 
             expect(is_in_check).to be true
           end
+
+          xit 'will stop on checkmate' do
+          end
         end
 
         xit 'prints the board after each round' do
         end
       end
 
-      context 'controlled moves' do
+      context 'Move history tests' do
         it 'updates the capture & move history of the board' do
           @ai_double = instance_double(AiPlayer)
           @input_double = class_double(Input_Manager)
