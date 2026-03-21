@@ -6,28 +6,38 @@ require_relative './board/board_manager'
 require_relative './player'
 require_relative './ai_player'
 require_relative './human_player'
+require_relative 'check'
 class GameManager
+  include CHECK
   def initialize
     @input_manager = Input_Manager
     @board_manager = Board_Manager.new
     @player = HumanPlayer.new
     @ai_player = AiPlayer.new(@board_manager)
-    @check = false
+    @player_in_check = false
+    @ai_player_in_check = false
   end
 
   attr_accessor :input_manager, :board_manager, :player, :ai_player
-  attr_reader :check
+  attr_reader :player_in_check, :ai_player_in_check
 
   def play_game
   end
 
   def play_round
     player_turn
+    update_check(@board_manager)
     # TODO: check for checkmate
     # TODO: update any scores
     ai_turn
+    update_check(@board_manager)
     # TODO: check for checkmate
     # TODO: update any scores
+  end
+
+  def update_check(board_manager)
+    @ai_player_in_check = CHECK.in_check?(board_manager, ai_player.color)
+    @player_in_check = CHECK.in_check?(board_manager, player.color)
   end
 
   def start_message
