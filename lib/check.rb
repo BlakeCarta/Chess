@@ -11,7 +11,7 @@ module CHECK
 
     threatend_squares = update_threats(board_ref, friendly_color)
 
-    threatend_squares.include?([king_location])
+    threatend_squares.map { |piece_moves| piece_moves.include?(king_location) }.any?(true)
   end
 
   def get_out_of_check(board_ref, color)
