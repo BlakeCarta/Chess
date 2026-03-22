@@ -135,8 +135,24 @@ describe GameManager do
           end
         end
 
-        xit 'prints the board after each round' do
-          expect(subject).to receive(:print_board)
+        it 'prints the board after each round' do
+          @ai_double = instance_double(AiPlayer)
+          @input_double = class_double(Input_Manager)
+
+          subject.ai_player = @ai_double
+          subject.input_manager = @input_double
+
+          allow(@ai_double).to receive(:color=).with('black')
+          allow(@ai_double).to receive(:color).and_return('black')
+
+          allow(@input_double).to receive(:play_turn).and_return(['move', [1, 3], [3, 3]])
+
+          allow(@ai_double).to receive(:make_move).and_return([[6, 4], [4, 4]])
+
+          subject.default_start
+
+          expect(subject).to receive(:print_board).twice
+          subject.play_round
         end
       end
 
