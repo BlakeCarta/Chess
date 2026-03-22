@@ -16,6 +16,8 @@ module CHECK
 
   def get_out_of_check(board_ref, color)
     threat_info = find_check_threat(board_ref, color)
+    return [] if threat_info.nil? || threat_info.empty?
+
     piece_to_move = find_piece_to_stop_check(threat_info, board_ref, color)
 
     move_piece(piece_to_move[:piece_location], piece_to_move[:destination])
@@ -28,9 +30,10 @@ module CHECK
   def get_block_destination(moves, threat_info, board_ref, color)
     destinations = []
 
-    threat_info[:threat_origin]
-    threat_info[:threat_spaces]
+    # threat_info[:threat_origin]
+    # threat_info[:threat_spaces]
 
+    moves.map! { |piece| piece.get_posistion } unless moves.first.is_a?(Array)
     moves.select do |move|
       location = board_ref.get_location(move)
       if (threat_info[:threat_spaces].include?(move) || threat_info[:threat_origin] == move) && (location.is_a?(String) || location.color != color)
@@ -51,6 +54,7 @@ module CHECK
     # king = find_king
     destinations = []
     king.get_moves(board_ref).map do |move|
+      move = move.get_posistion unless move.is_a?(Array)
       location = board_ref.get_location(move)
       destinations << move if !threats.include?(move) && (location.is_a?(String) || location.color != color)
     end
@@ -134,14 +138,18 @@ module CHECK
         next if square.color == color
 
         threat_spaces = square.get_moves(board_ref)
-        if threat_spaces.include?(king_location)
+        threat_spaces.map! { |piece| piece.get_posistion } unless threat_spaces.first.is_a?(Array)
+
+        if threat_spaces.map { |piece| piece }.include?(king_location)
           all_threats << { threat_spaces: threat_spaces, king_location: king_location,
                            threat_origin: [index, col_index] }
         end
       end
     end
     # ascending order
-    all_threats.empty? ? nil : all_threats.sort_by { |threat_info| threat_info[:threat_spaces].size }.last
+    return nil if all_threats.empty?
+
+    all_threats.sort_by { |threat_info| threat_info[:threat_spaces].size }.last
   end
 
   def find_king(board_ref, color)
