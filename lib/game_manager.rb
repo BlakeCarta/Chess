@@ -31,13 +31,10 @@ class GameManager
     update_check(@board_manager)
     return nil if @checkmate == true
 
-    # TODO: update any scores
     print_board
     ai_turn
     update_check(@board_manager)
     nil if @checkmate == true
-
-    # TODO: update any scores
   end
 
   def print_board
