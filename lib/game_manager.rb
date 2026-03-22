@@ -37,33 +37,6 @@ class GameManager
     nil if @checkmate == true
   end
 
-  def print_board
-    @board_manager.draw_board
-  end
-
-  def update_check(board_manager)
-    @ai_player_in_check = CHECK.in_check?(board_manager, ai_player.color)
-    @player_in_check = CHECK.in_check?(board_manager, player.color)
-
-    return nil unless [@ai_player_in_check, @player_in_check].any?(true)
-
-    check_for_checkmate
-  end
-
-  def check_for_checkmate
-    color = if @ai_player_in_check
-              @ai_player.color
-            else
-              @player.color
-            end
-
-    @checkmate = can_get_out_of_check?(@board_manager, color)
-  end
-
-  def can_get_out_of_check?(board_manager, color)
-    !CHECK.get_out_of_check(board_manager, color).nil?
-  end
-
   def start_message
     'Welcome to chess, game will start shortly!'
   end
@@ -192,5 +165,32 @@ class GameManager
 
   def player_used_quit?(player_input)
     player_input == 'quit'
+  end
+
+  def print_board
+    @board_manager.draw_board
+  end
+
+  def update_check(board_manager)
+    @ai_player_in_check = CHECK.in_check?(board_manager, ai_player.color)
+    @player_in_check = CHECK.in_check?(board_manager, player.color)
+
+    return nil unless [@ai_player_in_check, @player_in_check].any?(true)
+
+    check_for_checkmate
+  end
+
+  def check_for_checkmate
+    color = if @ai_player_in_check
+              @ai_player.color
+            else
+              @player.color
+            end
+
+    @checkmate = can_get_out_of_check?(@board_manager, color)
+  end
+
+  def can_get_out_of_check?(board_manager, color)
+    !CHECK.get_out_of_check(board_manager, color).nil?
   end
 end
