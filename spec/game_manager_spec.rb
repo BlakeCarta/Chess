@@ -119,12 +119,6 @@ describe GameManager do
             allow(@ai_double).to receive(:color=).with('black')
             allow(@ai_double).to receive(:color).and_return('black')
 
-            # d2 -> d4 w
-            # e7 -> e5 b
-            # h2 -> h4 w
-            # f8 -> b4 b - check
-            # c1 -> d2 w - break check
-            # ['move', [2, 0], [3, 1]]
             allow(@input_double).to receive(:play_turn).and_return(['move', [1, 3], [3, 3]],
                                                                    ['move', [1, 7], [3, 7]])
 
@@ -137,13 +131,12 @@ describe GameManager do
               subject.play_round
             end
 
-            # is_in_check = subject.player_in_check
-
             expect(subject.checkmate).to be true
           end
         end
 
         xit 'prints the board after each round' do
+          expect(subject).to receive(:print_board)
         end
       end
 
