@@ -16,10 +16,11 @@ class GameManager
     @ai_player = AiPlayer.new(@board_manager)
     @player_in_check = false
     @ai_player_in_check = false
+    @checkmate = false
   end
 
   attr_accessor :input_manager, :board_manager, :player, :ai_player
-  attr_reader :player_in_check, :ai_player_in_check
+  attr_reader :player_in_check, :ai_player_in_check, :checkmate
 
   def play_game
   end
@@ -27,17 +28,37 @@ class GameManager
   def play_round
     player_turn
     update_check(@board_manager)
-    # TODO: check for checkmate
+    return nil if @checkmate == true
+
     # TODO: update any scores
     ai_turn
     update_check(@board_manager)
-    # TODO: check for checkmate
+    nil if @checkmate == true
+
     # TODO: update any scores
   end
 
   def update_check(board_manager)
     @ai_player_in_check = CHECK.in_check?(board_manager, ai_player.color)
     @player_in_check = CHECK.in_check?(board_manager, player.color)
+
+    return nil unless [@ai_player_in_check, @player_in_check].any?(true)
+
+    check_for_checkmate
+  end
+
+  def check_for_checkmate
+    color = if @ai_player_in_check
+              @ai_player.color
+            else
+              @player.color
+            end
+
+    @checkmate = can_get_out_of_check?(@board_manager, color)
+  end
+
+  def can_get_out_of_check?(board_manager, color)
+    !CHECK.get_out_of_check(board_manager, color).nil?
   end
 
   def start_message
