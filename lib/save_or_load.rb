@@ -1,41 +1,27 @@
 require 'yaml'
 module STORAGE
-  def self.save(filename = nil)
+  def self.save(filename = nil, data)
     filename = get_save_filename if filename.nil?
-    write_to_yaml(filename)
+    write_to_yaml(filename, data)
   end
 
-  def self.load
-    filename = get_load_filename
+  def self.load(filename = nil)
+    filename = get_load_filename if filename.nil?
     read_from_yaml(filename)
   end
 
-  def self.write_to_yaml(filename)
-    data = {
-      input_manager: @input_manager,
-      board_manager: @board_manager,
-      player: @player,
-      ai_player: @ai_player,
-      player_in_check: @player_in_check,
-      ai_player_in_check: @ai_player_in_check,
-      checkmate: @checkmate
-    }
-
+  def self.write_to_yaml(filename, data)
     File.open("./saves/#{filename}.yml", 'w') do |file|
-      file.write(data.to_yaml)
+      YAML.dump(data, file)
     end
   end
 
   def self.read_from_yaml(filename)
-    instance_vars = YAML.load_file("./saves/#{filename}.yml")
+    classes = [Piece, Symbol, Generic_Piece, HumanPlayer, RSpec::Mocks::InstanceVerifyingDouble,
+               RSpec::Mocks::NamedObjectReference, AiPlayer]
 
-    @input_manager = instance_vars[:input_manager]
-    @board_manager = instance_vars[:board_manager]
-    @player = instance_vars[:player]
-    @ai_player = instance_vars[:ai_player]
-    @player_in_check = instance_vars[:player_in_check]
-    @ai_player_in_check = instance_vars[:ai_player_in_check]
-    @checkmate = instance_vars[:checkmate]
+    YAML.load_file("./saves/#{filename}.yml", permitted_classes: classes,
+                                              aliases: true)
   end
 
   def self.get_save_filename
@@ -60,5 +46,15 @@ module STORAGE
     saved_games.map do |file|
       puts "FILE: #{file}"
     end
+  end
+
+  def self.compare_board_data(ref_board, loaded_board)
+    board_location_checks = []
+    ref_board.each_with_index do |row, rindex|
+      row.each_with_index do |col, cindex|
+        board_location_checks << ((loaded_board[rindex][cindex].is_a?(String) == col.is_a?(String)) || (loaded_board[rindex][cindex].name == col.name) && (loaded_board[rindex][cindex].color == col.color))
+      end
+    end
+    board_location_checks
   end
 end
