@@ -6,8 +6,10 @@ require_relative './player'
 require_relative './ai_player'
 require_relative './human_player'
 require_relative 'check'
+require_relative 'save_or_load'
 class GameManager
   include CHECK
+  include STORAGE
   def initialize
     @input_manager = Input_Manager
     @board_manager = Board_Manager.new
