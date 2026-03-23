@@ -268,7 +268,40 @@ describe GameManager do
   end
 
   context 'Save/Load Functions' do
-    xit '(placeholder) can save a game' do
+    it '(placeholder) can save a game' do
+      @ai_double = instance_double(AiPlayer)
+      @input_double = class_double(Input_Manager)
+
+      subject.ai_player = @ai_double
+      subject.input_manager = @input_double
+
+      allow(@ai_double).to receive(:color=).with('black')
+      allow(@ai_double).to receive(:color).and_return('black')
+
+      # d2 -> d4 w
+      # e7 -> e5 b
+      # h2 -> h4 w
+      # f8 -> b4 b - check
+      # c1 -> d2 w - break check
+      # ['move', [2, 0], [3, 1]]
+      allow(@input_double).to receive(:play_turn).and_return(['move', [1, 3], [3, 3]],
+                                                             ['move', [1, 7], [3, 7]])
+
+      allow(@ai_double).to receive(:make_move).and_return([[6, 4], [4, 4]],
+                                                          [[7, 5], [3, 1]])
+
+      subject.default_start
+
+      2.times do
+        subject.play_round
+      end
+
+      # is_in_check = subject.player_in_check
+      filename = 'test'
+      STORAGE.save(filename)
+      saved_games = Dir.entries('saves')
+
+      expect(saved_games.any? { |e| e == "#{filename}.yml" }).to be true
     end
 
     xit '(placeholder) can load a game' do
