@@ -64,4 +64,10 @@ module Input_Manager
 
     [column, row].join('')
   end
+
+  def get_filename
+    # this function is extremely simple for now
+    # but should allow for more complex logic if required
+    $stdin.gets.chomp
+  end
 end
