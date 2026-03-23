@@ -274,7 +274,7 @@ describe GameManager do
       File.delete('./saves/test.yml') if File.exist?('./saves/test.yml')
     end
 
-    it '(placeholder) can save a game' do
+    it 'can save a game' do
       @ai_double = instance_double(AiPlayer)
       @input_double = class_double(Input_Manager)
 
@@ -319,7 +319,7 @@ describe GameManager do
       expect(saved_games.any? { |e| e == "#{filename}.yml" }).to be true
     end
 
-    it '(placeholder) can load a game' do
+    it 'can load a game' do
       @ai_double = instance_double(AiPlayer)
       @input_double = class_double(Input_Manager)
 
