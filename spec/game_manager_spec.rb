@@ -269,6 +269,11 @@ describe GameManager do
   end
 
   context 'Save/Load Functions' do
+    after do
+      # remove test file after each test, to prevent cross contamination
+      File.delete('./saves/test.yml') if File.exist?('./saves/test.yml')
+    end
+
     it '(placeholder) can save a game' do
       @ai_double = instance_double(AiPlayer)
       @input_double = class_double(Input_Manager)
@@ -359,6 +364,10 @@ describe GameManager do
       expect(data[:player_in_check]).to eq(subject.player_in_check)
       expect(data[:ai_player_in_check]).to eq(subject.ai_player_in_check)
       expect(data[:checkmate]).to eq(subject.checkmate)
+
+      Dir.entries('saves').each do |file|
+        File.delete(file) if File.file?(file)
+      end
     end
   end
 end
