@@ -157,11 +157,35 @@ class GameManager
   def player_used_save(player_input)
     player_input == 'save'
     # save logic called here
+    data = {
+      input_manager: @input_manager,
+      board: @board_manager.get_board,
+      board_capture_history: @board_manager.capture_history,
+      board_full_move_history: @board_manager.full_move_history,
+      player: @player,
+      ai_player: @ai_player,
+      player_in_check: @player_in_check,
+      ai_player_in_check: @ai_player_in_check,
+      checkmate: @checkmate
+    }
+    STORAGE.save(nil, data)
   end
 
   def player_used_load(player_input)
     player_input[0] == 'load'
     # load logic here
+    instance_vars = STORAGE.load
+
+    set_instance_vars(instance_vars)
+  end
+
+  def set_instance_vars(instance_vars)
+    @board_manager = instance_vars[:board_manager]
+    @player = instance_vars[:player]
+    @ai_player = instance_vars[:ai_player]
+    @player_in_check = instance_vars[:player_in_check]
+    @ai_player_in_check = instance_vars[:ai_player_in_check]
+    @checkmate = instance_vars[:checkmate]
   end
 
   def player_used_quit?(player_input)
