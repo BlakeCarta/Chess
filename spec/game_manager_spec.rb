@@ -1,4 +1,5 @@
 require_relative '../lib/game_manager'
+require_relative '../lib/Pieces/piece'
 describe GameManager do
   subject { GameManager.new }
 
@@ -296,15 +297,68 @@ describe GameManager do
         subject.play_round
       end
 
-      # is_in_check = subject.player_in_check
       filename = 'test'
-      STORAGE.save(filename)
+      data = {
+        board: subject.board_manager.get_board,
+        board_capture_history: subject.board_manager.capture_history,
+        board_full_move_history: subject.board_manager.full_move_history,
+        player: subject.player,
+        ai_player: subject.ai_player,
+        player_in_check: subject.player_in_check,
+        ai_player_in_check: subject.ai_player_in_check,
+        checkmate: subject.checkmate
+      }
+      STORAGE.save(filename, data)
       saved_games = Dir.entries('saves')
 
       expect(saved_games.any? { |e| e == "#{filename}.yml" }).to be true
     end
 
-    xit '(placeholder) can load a game' do
+    it '(placeholder) can load a game' do
+      @ai_double = instance_double(AiPlayer)
+      @input_double = class_double(Input_Manager)
+
+      subject.ai_player = @ai_double
+      subject.input_manager = @input_double
+
+      allow(@ai_double).to receive(:color=).with('black')
+      allow(@ai_double).to receive(:color).and_return('black')
+
+      allow(@input_double).to receive(:play_turn).and_return(['move', [1, 4], [3, 4]],
+                                                             ['move', [1, 7], [3, 7]])
+
+      allow(@ai_double).to receive(:make_move).and_return([[6, 4], [4, 4]],
+                                                          [[7, 5], [3, 1]])
+
+      subject.default_start
+
+      2.times do
+        subject.play_round
+      end
+
+      filename = 'test'
+
+      data = {
+        board: subject.board_manager.get_board,
+        board_capture_history: subject.board_manager.capture_history,
+        board_full_move_history: subject.board_manager.full_move_history,
+        player: subject.player,
+        ai_player: subject.ai_player,
+        player_in_check: subject.player_in_check,
+        ai_player_in_check: subject.ai_player_in_check,
+        checkmate: subject.checkmate
+      }
+      STORAGE.save(filename, data)
+
+      saved_games = Dir.entries('saves')
+      data = STORAGE.load(filename)
+      # check each location has the same name and color or is empty
+      board_location_checks = STORAGE.compare_board_data(subject.board_manager.get_board, data[:board])
+
+      expect(board_location_checks.all?(true)).to be true
+      expect(data[:player_in_check]).to eq(subject.player_in_check)
+      expect(data[:ai_player_in_check]).to eq(subject.ai_player_in_check)
+      expect(data[:checkmate]).to eq(subject.checkmate)
     end
   end
 end
