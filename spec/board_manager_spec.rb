@@ -148,14 +148,16 @@ describe Board_Manager do
       it 'returns the correct default layout' do
         expected_out = <<~OUTPUT
 
-          R N B Q K B N R
-          P P P P P P P P
-          x x x x x x x x
-          x x x x x x x x
-          x x x x x x x x
-          x x x x x x x x
-          P P P P P P P P
-          R N B Q K B N R
+          A = 0, H = 7
+            A B C D E F G H
+          1 R N B Q K B N R
+          2 P P P P P P P P
+          3 x x x x x x x x
+          4 x x x x x x x x
+          5 x x x x x x x x
+          6 x x x x x x x x
+          7 P P P P P P P P
+          8 R N B Q K B N R
         OUTPUT
 
         subject.setup_board

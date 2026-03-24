@@ -66,10 +66,14 @@ class Board_Manager
   def draw_board
     # ensure a newline
     puts ''
+    puts 'A = 0, H = 7'
+    puts '  A B C D E F G H'
+    row_num = 1
     output_text = @board.gameboard.map do |row|
       puts(row.map do |square|
         square.is_a?(String) ? square : square.icon
-      end.join(' '))
+      end.prepend("#{row_num}").join(' '))
+      row_num += 1
     end
 
     output_text.delete_if(&:nil?)
