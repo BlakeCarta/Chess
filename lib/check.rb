@@ -137,7 +137,7 @@ module CHECK
         next if square.is_a?(String)
         next if square.color == color
 
-        threat_spaces = square.get_moves(board_ref)
+        threat_spaces = square.get_moves(board_ref, true)
         threat_spaces.map! { |piece| piece.get_posistion } unless threat_spaces.first.is_a?(Array)
 
         if threat_spaces.map { |piece| piece }.include?(king_location)
