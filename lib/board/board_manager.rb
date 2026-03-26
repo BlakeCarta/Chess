@@ -39,7 +39,8 @@ class Board_Manager
 
     set_location(target_location, get_location(location))
     get_location(target_location).set_new_posistion(target_location) unless get_location(target_location).is_a?(String)
-    set_location(location, nil)
+    # set_location(location, nil)
+    delete_location(location)
 
     add_to_full_move_history(location, target_location)
 
