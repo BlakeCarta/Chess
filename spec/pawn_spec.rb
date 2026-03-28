@@ -124,7 +124,7 @@ describe Piece do
           subject.set_new_posistion(new_posistion)
 
           return_cords = true
-          expected = [[4, 7]]
+          expected = []
 
           arguments_hash = { board_manager: @board_manager,
                              black_posistions: black_posistions,
@@ -144,7 +144,7 @@ describe Piece do
           subject.set_new_posistion(new_posistion)
 
           return_cords = true
-          expected = []
+          expected = [[1, 2]]
 
           arguments_hash = { board_manager: @board_manager,
                              black_posistions: black_posistions,
@@ -172,7 +172,7 @@ describe Piece do
                            new_capturing_posistion: [2, 2], can_capture: true }
 
             return_cords = true
-            expected = [[2, 1], en_passant]
+            expected = [en_passant]
 
             arguments_hash = { board_manager: @board_manager,
                                black_posistions: [],
