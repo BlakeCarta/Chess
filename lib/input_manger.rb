@@ -65,6 +65,17 @@ module Input_Manager
     [column, row].join('')
   end
 
+  def self.get_upgrade
+    accepted_types = ['queen, rook, knight, bishop']
+    loop do
+      puts 'please choose an upgrade'
+      puts 'queen, rook, knight, bishop'
+      command = $stdin.gets.chomp
+      break if accepted_types.include?(command.downcase)
+    end
+    command
+  end
+
   def get_filename
     # this function is extremely simple for now
     # but should allow for more complex logic if required
