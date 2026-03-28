@@ -110,21 +110,27 @@ describe GameManager do
             expect(is_in_check).to be true
           end
 
-          xit '(rework)stops on checkmate' do
+          it '(fools mate) detects checkmate' do
             @ai_double = instance_double(AiPlayer)
             @input_double = class_double(Input_Manager)
 
             subject.ai_player = @ai_double
             subject.input_manager = @input_double
 
+            # white to f2 - f3
+            # black to e7 - e5
+            # white to g2 - g4
+            # black queen to d8 - h4
+            # white in checkmate
+
             allow(@ai_double).to receive(:color=).with('black')
             allow(@ai_double).to receive(:color).and_return('black')
 
-            allow(@input_double).to receive(:play_turn).and_return(['move', [1, 3], [3, 3]],
-                                                                   ['move', [1, 7], [3, 7]])
+            allow(@input_double).to receive(:play_turn).and_return(['move', [1, 5], [2, 5]],
+                                                                   ['move', [1, 6], [3, 6]])
 
             allow(@ai_double).to receive(:make_move).and_return([[6, 4], [4, 4]],
-                                                                [[7, 5], [3, 1]])
+                                                                [[7, 3], [3, 7]])
 
             subject.default_start
 
