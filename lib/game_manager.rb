@@ -35,7 +35,11 @@ class GameManager
     print_board
     ai_turn
     update_check(@board_manager)
-    nil if @checkmate == true
+    return nil if @checkmate == true
+
+    puts 'End of Round!'
+    print_board
+    true
   end
 
   def start_message
@@ -122,6 +126,9 @@ class GameManager
     if valid_player_move?(player_input)
       player_used_move(player_input)
       return true
+    elsif is_special_move?(player_input)
+      handle_special_move(player_input)
+      return true
     else
       command = if player_input.is_a?(Array)
                   player_input[0]
@@ -144,6 +151,84 @@ class GameManager
       end
     end
     false
+  end
+
+  def is_special_move?(input)
+    return false if input.is_a?(String)
+
+    player_input = input.find { |e| e.is_a?(Hash) }
+    return false unless player_input.is_a?(Hash)
+
+    if player_input.key?(:new_king_posistion) && player_input.key?(:new_rook_posistion)
+      return true
+    elsif player_input.key?(:can_capture) && player_input.key?(:new_capturing_posistion)
+      return true
+    elsif player_input.key?(:new_piece_type)
+      return true
+    end
+
+    false
+  end
+
+  def handle_special_move(input)
+    return false unless input.first.is_a?(Hash) == true || input.last.is_a?(Hash) == true
+
+    player_input = input.find { |e| e.is_a?(Hash) }
+    # castle
+    #           castle_move_right = { king_original_posistion: [0, 4], rook_original_posistion: [0, 7],
+    # new_king_posistion: [0, 6], new_rook_posistion: [0, 5] }
+    # en passant
+    #             en_passant = { original_capturing_posistion: new_posistion, original_captured_posistion: [4, 3],
+    # new_capturing_posistion: [5, 3], can_capture: true }
+    # upgrade
+    if player_input.key?(:new_king_posistion) && player_input.key?(:new_rook_posistion)
+      # then its a castle move
+      # call move twice
+      @board_manager.move_piece(player_input[:king_original_posistion], player_input[:new_king_posistion])
+      @board_manager.move_piece(player_input[:rook_original_posistion], player_input[:new_rook_posistion])
+    elsif player_input.key?(:can_capture) && player_input.key?(:new_capturing_posistion)
+      # then its an en passant
+      # call move for pawn to desired location
+      @board_manager.move_piece(player_input[:original_capturing_posistion], player_input[:new_capturing_posistion])
+      captured_piece = @board_manager.get_location(player_input[:original_captured_posistion])
+      @board_manager.delete_location(player_input[:original_captured_posistion])
+      @board_manager.add_to_capture_history(captured_piece)
+    elsif player_input.key?(:new_piece_type)
+      # upgrade
+      @board_manager.delete_location(player_input[:original_posistion])
+      piece = Piece.new(type: player_input[:upgrade_type], posistion: player_input[:original_posistion],
+                        color: player_input[:color])
+      @board_manager.set_location(player_input[:original_posistion], piece)
+    end
+  end
+
+  def check_for_pawn_upgrades(color)
+    index_target = if color == 'white'
+                     7
+                   else
+                     0
+                   end
+
+    @board_manager.get_board.each_with_index do |row, index|
+      next if index != index_target
+
+      row.each_with_index do |square, col_index|
+        next if square == 'x'
+        next if square.color != color
+
+        return get_upgrade_info([index, col_index], color) if square.name == 'pawn'
+      end
+    end
+  end
+
+  def get_upgrade_info(location, color)
+    choice = if color == @player.color
+               @input_manager.get_upgrade
+             else
+               @ai_player.get_upgrade
+             end
+    { upgrade_type: choice, original_posistion: location,
+      color: color }
   end
 
   def player_used_select(player_input)
@@ -200,9 +285,12 @@ class GameManager
     @ai_player_in_check = CHECK.in_check?(board_manager, ai_player.color)
     @player_in_check = CHECK.in_check?(board_manager, player.color)
 
-    return nil unless [@ai_player_in_check, @player_in_check].any?(true)
+    return unless [@ai_player_in_check, @player_in_check].any?(true)
 
     check_for_checkmate
+    return unless @checkmate == true
+
+    nil
   end
 
   def check_for_checkmate
@@ -212,7 +300,11 @@ class GameManager
               @player.color
             end
 
-    @checkmate = can_get_out_of_check?(@board_manager, color)
+    @checkmate = if can_get_out_of_check?(@board_manager, color)
+                   false
+                 else
+                   true
+                 end
   end
 
   def can_get_out_of_check?(board_manager, color)
