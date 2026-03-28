@@ -10,9 +10,11 @@ module EnPassantFunctions
   def can_en_passant?
     return false unless is_pawn?
 
-    get_target_posistions.each do |target_posistion|
+    checks = get_target_posistions.map do |target_posistion|
       check_en_passant?(target_posistion)
     end
+
+    checks.any?(true)
   end
 
   def check_en_passant?(target_posistion)
