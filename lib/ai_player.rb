@@ -32,6 +32,10 @@ class AiPlayer < Player
     CHECK.get_out_of_check(@board_manager_ref, color)
   end
 
+  def get_upgrade
+    'queen'
+  end
+
   def get_furthest_forward
     moves = []
     i = 0
