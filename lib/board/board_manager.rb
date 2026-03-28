@@ -61,7 +61,7 @@ class Board_Manager
         end
       end
     end
-    threatend_squares
+    threatend_squares.flatten(1)
   end
 
   def draw_board
