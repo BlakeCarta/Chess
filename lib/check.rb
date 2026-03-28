@@ -11,7 +11,8 @@ module CHECK
 
     threatend_squares = update_threats(board_ref, friendly_color)
 
-    threatend_squares.map { |piece_moves| piece_moves.include?(king_location) }.any?(true)
+    # threatend_squares.map { |piece_moves| piece_moves.include?(king_location) }.any?(true)
+    threatend_squares.include?(king_location)
   end
 
   def get_out_of_check(board_ref, color)
@@ -19,6 +20,8 @@ module CHECK
     return [] if threat_info.nil? || threat_info.empty?
 
     piece_to_move = find_piece_to_stop_check(threat_info, board_ref, color)
+
+    return nil if piece_to_move.all?(&:nil?)
 
     move_piece(piece_to_move[:piece_location], piece_to_move[:destination])
   end
@@ -67,7 +70,9 @@ module CHECK
       piece_ref = board_ref.get_location(piece_location)
       next if piece_ref.is_a?(String)
 
-      moves = piece_ref.get_moves(board_ref)
+      moves = piece_ref.get_moves(board_ref, true)
+      next if moves.empty?
+
       # check if the threat itself can be eliminated, if so make that move
       if piece_location != king_location
         if moves.include?(threat_info[:threat_origin])
@@ -76,8 +81,8 @@ module CHECK
             return { piece_location: piece_location,
                      destination: threat_info[:threat_origin] }
           end
-        elsif can_intercept_threat?(moves, threat_info)
-          destination = get_intercept_destination(moves, threat_info)
+        elsif can_intercept_threat?(moves, threat_info, king_location, board_ref)
+          destination = get_intercept_destination(moves, threat_info, king_location, board_ref)
 
           unless destination.nil?
             return { piece_location: piece_location,
@@ -120,12 +125,40 @@ module CHECK
     potential_pieces
   end
 
-  def can_intercept_threat?(moves, threat_info)
-    moves.any? { |move| threat_info[:threat_spaces].include?(move) }
+  def can_intercept_threat?(moves, threat_info, king_location, board_ref)
+    # king_location
+    # match_indexs = moves.map { |move| king_location[0] == move[0] || king_location[1] == move[1] }
+    # inbetween = [(king_location[0] - threat_info[:threat_origin][0]).abs, (king_location[1], threat_info[:threat_origin][1])
+
+    # betweens = moves.map do |move|
+    #  move[0].between?(king_location[0],
+    #                   threat_info[:threat_origin].first) || move[1].between?(king_location[1],
+    #                                                                          threat_info[:threat_origin].last)
+    # end
+    ## moves.any? { |move| threat_info[:threat_spaces].include?(move) }
+    # betweens.any?(true)
+    #
+    !get_intercept_destination(moves, threat_info, king_location, board_ref).nil?
   end
 
-  def get_intercept_destination(moves, threat_info)
-    moves.select { |move| threat_info[:threat_spaces].include?(move) }
+  def get_intercept_destination(moves, threat_info, king_location, board_ref)
+    # moves.select { |move| threat_info[:threat_spaces].include?(move) }
+    # betweens = moves.map do |move|
+    #  move[0].between?(king_location[0],
+    #                   threat_info[:threat_origin].first) || move[1].between?(king_location[1],
+    #                                                                          threat_info[:threat_origin].last)
+    # end
+    # return unless moves.any? { |move| threat_info[:threat_spaces].include?(move) }
+
+    king = board_ref.get_location(king_location)
+    moves.select { |move| threat_info[:threat_spaces].include?(move) }.map do |location|
+      temp_board = Marshal.load(Marshal.dump(board_ref))
+      temp_board.set_location(location,
+                              Piece.new(type: 'pawn', posistion: location, color: king.color))
+      threats = temp_board.get_threatend_squares(king.color)
+      return location unless threats.include?(king_location)
+    end
+    nil
   end
 
   # returns the threating piece that can attack the most spaces
@@ -140,7 +173,8 @@ module CHECK
         threat_spaces = square.get_moves(board_ref, true)
         threat_spaces.map! { |piece| piece.get_posistion } unless threat_spaces.first.is_a?(Array)
 
-        if threat_spaces.map { |piece| piece }.include?(king_location)
+        # if threat_spaces.map { |piece| piece }.include?(king_location)
+        if threat_spaces.include?(king_location)
           all_threats << { threat_spaces: threat_spaces, king_location: king_location,
                            threat_origin: [index, col_index] }
         end
