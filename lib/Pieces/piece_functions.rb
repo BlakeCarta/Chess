@@ -41,6 +41,8 @@ module Piece_functions
     # should i write different bfs/dfs versions for each piece
     moves = if simple_moves?
               simple_move
+            elsif is_pawn?
+              pawn_move
             else
               depth_moves
             end
@@ -75,7 +77,7 @@ module Piece_functions
   private
 
   def simple_moves?
-    simple_pieces = %w[pawn king knight]
+    simple_pieces = %w[king knight]
     simple_pieces.include?(name)
   end
 
@@ -118,7 +120,7 @@ module Piece_functions
         current_node = if capture?(current_node)
                          # dummy value to ensure next iteration increments, need a cleaner solution
                          [-1, -1]
-                       else
+                       elsif empty_square?(current_node)
                          [offset[0] + current_node[0], offset[1] + current_node[1]]
                        end
 
@@ -135,9 +137,33 @@ module Piece_functions
 
   def simple_move
     # pawns cant move 2 spaces if it has already moved
-    @moves.shift if pawn_moved? && @moves.size == 2
+    # @moves.shift if pawn_moved? && @moves.size == 2
 
     @root.children.keep_if { |piece| capture?(piece.get_posistion) || empty_square?(piece.get_posistion) }
+  end
+
+  def pawn_move
+    # pawns cant move 2 spaces if it has already moved
+    @moves.shift if pawn_moved? && @moves.size == 2
+
+    potential_moves = @root.children.keep_if { |piece| empty_square?(piece.get_posistion) }
+    if color == 'white'
+      # valid?(current_node)
+      left = [get_posistion[0] + 1, get_posistion[1] + 1]
+      right = [get_posistion[0] + 1, get_posistion[1] - 1]
+      potential_moves.append(right) if valid?(right) && capture?(right)
+
+      potential_moves.append(left) if valid?(left) && capture?(left)
+    else
+      left = [get_posistion[0] - 1, get_posistion[1] + 1]
+      right = [get_posistion[0] - 1, get_posistion[1] - 1]
+      potential_moves.append(right) if valid?(right) && capture?(right)
+
+      potential_moves.append(left) if valid?(left) && capture?(left)
+    end
+    potential_moves.map do |location|
+      location.is_a?(Array) ? Piece.new(type: 'pawn', posistion: location, color: color) : location
+    end
   end
 
   def make_pawn(type, posistion, color)
