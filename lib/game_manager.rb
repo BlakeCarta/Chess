@@ -29,11 +29,13 @@ class GameManager
   def play_round
     print_board
     player_turn
+    check_board_for_upgrades(@player.color)
     update_check(@board_manager)
     return nil if @checkmate == true
 
     print_board
     ai_turn
+    check_board_for_upgrades(@ai_player.color)
     update_check(@board_manager)
     return nil if @checkmate == true
 
@@ -153,6 +155,31 @@ class GameManager
     false
   end
 
+  def check_board_for_upgrades(color)
+    temp = []
+    if color == 'black'
+      temp = @board_manager.get_board[0].map do |location|
+        !location.is_a?(String) && location.name == 'pawn' && location.color == color
+      end
+      return get_upgrade(color, [0, temp.find_index(true)]) if temp.any?(true)
+    else
+      temp = @board_manager.get_board[7].map do |location|
+        !location.is_a?(String) && location.name == 'pawn' && location.color == color
+      end
+      return get_upgrade(color, [7, temp.find_index(true)]) if temp.any?(true)
+    end
+    nil
+  end
+
+  def get_upgrade(color, location)
+    upgrade_type = if color == @ai_player.color
+                     @ai_player.get_upgrade
+                   else
+                     @input_manager.get_upgrade
+                   end
+    handle_special_move({ upgrade_type: upgrade_type, original_posistion: location, color: color })
+  end
+
   def is_special_move?(input)
     return false if input.is_a?(String)
 
@@ -171,9 +198,15 @@ class GameManager
   end
 
   def handle_special_move(input)
-    return false unless input.first.is_a?(Hash) == true || input.last.is_a?(Hash) == true
+    if input.is_a?(Array)
+      player_input = input.find { |e| e.is_a?(Hash) }
+    elsif input.is_a?(Hash)
+      player_input = input
+    else
+      return false
+    end
+    return false if player_input.nil?
 
-    player_input = input.find { |e| e.is_a?(Hash) }
     # castle
     #           castle_move_right = { king_original_posistion: [0, 4], rook_original_posistion: [0, 7],
     # new_king_posistion: [0, 6], new_rook_posistion: [0, 5] }
@@ -193,7 +226,7 @@ class GameManager
       captured_piece = @board_manager.get_location(player_input[:original_captured_posistion])
       @board_manager.delete_location(player_input[:original_captured_posistion])
       @board_manager.add_to_capture_history(captured_piece)
-    elsif player_input.key?(:new_piece_type)
+    elsif player_input.key?(:upgrade_type)
       # upgrade
       @board_manager.delete_location(player_input[:original_posistion])
       piece = Piece.new(type: player_input[:upgrade_type], posistion: player_input[:original_posistion],
