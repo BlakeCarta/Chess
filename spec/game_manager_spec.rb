@@ -379,7 +379,29 @@ describe GameManager do
       end
     end
 
-    xit 'a piece can upgrade' do
+    it 'a piece can upgrade' do
+      @ai_double = instance_double(AiPlayer)
+      @input_double = class_double(Input_Manager)
+      @board_manager = Board_Manager.new
+
+      subject.ai_player = @ai_double
+      subject.input_manager = @input_double
+      subject.board_manager = @board_manager
+
+      allow(@ai_double).to receive(:color=).with('black')
+      allow(@ai_double).to receive(:color).and_return('black')
+
+      expect(@input_double).to receive(:get_upgrade)
+
+      @board_manager.set_location([6, 7], Piece.new(type: 'pawn', posistion: [6, 7], color: 'white'))
+      @board_manager.set_location([6, 1], Piece.new(type: 'pawn', posistion: [6, 1], color: 'black'))
+      allow(@input_double).to receive(:play_turn).and_return(['move', [6, 7], [7, 7]])
+      allow(@input_double).to receive(:get_upgrade).and_return('queen')
+
+      allow(@ai_double).to receive(:make_move).and_return([[6, 1], [4, 1]])
+      subject.play_round
+
+      expect(@board_manager.get_location([7, 7]).name).to eq('queen')
     end
 
     it 'can save & load a long game' do
