@@ -24,6 +24,15 @@ class GameManager
   attr_reader :player_in_check, :ai_player_in_check, :checkmate
 
   def play_game
+    round_data = ''
+    50.times do |i|
+      break if round_data.nil? || round_data == false
+
+      round_data = play_round
+
+      puts 'New Round! Round: #{i}'
+    end
+    puts 'Game over'
   end
 
   def play_round
@@ -42,6 +51,10 @@ class GameManager
     puts 'End of Round!'
     print_board
     true
+  end
+
+  def match_move_histroy
+    @board_manager.full_move_history
   end
 
   def start_message
